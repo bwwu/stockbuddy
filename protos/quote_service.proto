@@ -2,13 +2,14 @@ syntax = "proto3";
 package stockbuddy;
 
 message Quote {
-	 string symbol = 1;
-	 float open = 2;
-	 float high = 3;
-	 float low = 4;
-	 float close = 5;
-	 float adj_close = 6;
-	 int32 volume = 7;
+	string symbol = 1;
+	float open = 2;
+	float high = 3;
+	float low = 4;
+	float close = 5;
+	float adj_close = 6;
+	int32 volume = 7;
+	int32 timestamp = 8;
 }
 
 message QuoteRequest {

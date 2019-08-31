@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='stockbuddy',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x13quote_service.proto\x12\nstockbuddy\"r\n\x05Quote\x12\x0e\n\x06symbol\x18\x01 \x01(\t\x12\x0c\n\x04open\x18\x02 \x01(\x02\x12\x0c\n\x04high\x18\x03 \x01(\x02\x12\x0b\n\x03low\x18\x04 \x01(\x02\x12\r\n\x05\x63lose\x18\x05 \x01(\x02\x12\x11\n\tadj_close\x18\x06 \x01(\x02\x12\x0e\n\x06volume\x18\x07 \x01(\x05\".\n\x0cQuoteRequest\x12\x0e\n\x06symbol\x18\x01 \x01(\t\x12\x0e\n\x06period\x18\x02 \x01(\x05\"2\n\rQuoteResponse\x12!\n\x06quotes\x18\x01 \x03(\x0b\x32\x11.stockbuddy.Quote2W\n\x0cQuoteService\x12G\n\x10ListQuoteHistory\x12\x18.stockbuddy.QuoteRequest\x1a\x19.stockbuddy.QuoteResponseb\x06proto3')
+  serialized_pb=_b('\n\x13quote_service.proto\x12\nstockbuddy\"\x85\x01\n\x05Quote\x12\x0e\n\x06symbol\x18\x01 \x01(\t\x12\x0c\n\x04open\x18\x02 \x01(\x02\x12\x0c\n\x04high\x18\x03 \x01(\x02\x12\x0b\n\x03low\x18\x04 \x01(\x02\x12\r\n\x05\x63lose\x18\x05 \x01(\x02\x12\x11\n\tadj_close\x18\x06 \x01(\x02\x12\x0e\n\x06volume\x18\x07 \x01(\x05\x12\x11\n\ttimestamp\x18\x08 \x01(\x05\".\n\x0cQuoteRequest\x12\x0e\n\x06symbol\x18\x01 \x01(\t\x12\x0e\n\x06period\x18\x02 \x01(\x05\"2\n\rQuoteResponse\x12!\n\x06quotes\x18\x01 \x03(\x0b\x32\x11.stockbuddy.Quote2W\n\x0cQuoteService\x12G\n\x10ListQuoteHistory\x12\x18.stockbuddy.QuoteRequest\x1a\x19.stockbuddy.QuoteResponseb\x06proto3')
 )
 
 
@@ -82,6 +82,13 @@ _QUOTE = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='timestamp', full_name='stockbuddy.Quote.timestamp', index=7,
+      number=8, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -94,8 +101,8 @@ _QUOTE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=35,
-  serialized_end=149,
+  serialized_start=36,
+  serialized_end=169,
 )
 
 
@@ -132,8 +139,8 @@ _QUOTEREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=151,
-  serialized_end=197,
+  serialized_start=171,
+  serialized_end=217,
 )
 
 
@@ -163,8 +170,8 @@ _QUOTERESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=199,
-  serialized_end=249,
+  serialized_start=219,
+  serialized_end=269,
 )
 
 _QUOTERESPONSE.fields_by_name['quotes'].message_type = _QUOTE
@@ -202,8 +209,8 @@ _QUOTESERVICE = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=251,
-  serialized_end=338,
+  serialized_start=271,
+  serialized_end=358,
   methods=[
   _descriptor.MethodDescriptor(
     name='ListQuoteHistory',
