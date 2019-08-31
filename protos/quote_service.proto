@@ -3,13 +3,13 @@ package stockbuddy;
 
 message Quote {
 	string symbol = 1;
-	float open = 2;
-	float high = 3;
-	float low = 4;
-	float close = 5;
-	float adj_close = 6;
-	int32 volume = 7;
-	int32 timestamp = 8;
+	int32 timestamp = 2;
+	float open = 3;
+	float high = 4;
+	float low = 5;
+	float close = 6;
+	float adj_close = 7;
+	int32 volume = 8;
 }
 
 message QuoteRequest {
