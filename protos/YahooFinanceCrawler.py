@@ -1,5 +1,6 @@
 import datetime
 import requests
+import quote_service_pb2
 
 class YahooFinanceCrawler:
     # PRF=t%3D<SYMBOL>
@@ -9,18 +10,35 @@ class YahooFinanceCrawler:
     BASE_URL = "https://query1.finance.yahoo.com/v7/finance/download/{}?period1={}&period2={}&interval=1d&events=history&crumb=pRB6UiIiFnn"
 
     # Get history price history for the past year for a symbol
-    def getSymbolHistory(symbol):
+    def getQuoteHistory(symbol, days = 365):
         cookiesForRequest = YahooFinanceCrawler.cookies.copy()
         cookiesForRequest["PRF"] = "t%3d{}".format(symbol)
 
         # Period query params should be 1 year ago and today respectively.
         periodEnd = datetime.datetime.now()
-        periodStart = periodEnd - datetime.timedelta(days=365)
+        periodStart = periodEnd - datetime.timedelta(days=days)
         url = YahooFinanceCrawler.BASE_URL.format(symbol, int(periodStart.timestamp()), int(periodEnd.timestamp()))
         
         r = requests.get(url, cookies = cookiesForRequest)
-        for line in r.text.split('\n'):
-            #op,high,low,close,ajd,vol,*_ = line.split(',')
-            #print(op)
-            print(str(len(line.split(','))) + ' ' + line)
 
+        quoteProtos = []
+        for line in r.text.split('\n'):
+            rowItems = line.split(',')
+            if len(rowItems) == 7 and rowItems[0] != 'Date':
+                quote = createQuoteProtoFromRow(symbol, rowItems)
+                quoteProtos.append(quote)
+        return quoteProtos
+                
+
+
+def createQuoteProtoFromRow(symbol, rowItems):
+    quote = quote_service_pb2.Quote()
+    quote.symbol = symbol
+    quote.timestamp = int(datetime.datetime.strptime(rowItems[0], '%Y-%m-%d').timestamp())
+    quote.open = float(rowItems[1])
+    quote.high = float(rowItems[2])
+    quote.low = float(rowItems[3])
+    quote.close = float(rowItems[4])
+    quote.adj_close = float(rowItems[5])
+    quote.volume = int(rowItems[6])
+    
