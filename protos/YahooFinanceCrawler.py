@@ -41,4 +41,5 @@ def createQuoteProtoFromRow(symbol, rowItems):
     quote.close = float(rowItems[4])
     quote.adj_close = float(rowItems[5])
     quote.volume = int(rowItems[6])
+    return quote
     
