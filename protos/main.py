@@ -12,6 +12,7 @@ def serve():
     quote_service_pb2_grpc.add_QuoteServiceServicer_to_server(QuoteServer.QuoteServer(), server)
     server.add_insecure_port('[::]:50051')
     server.start()
+    print('Running on port 50051')
     try:
         while True:
             time.sleep(_ONE_DAY_IN_SECONDS)
