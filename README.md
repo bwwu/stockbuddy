@@ -1,6 +1,7 @@
 ## Requirements
 
 * python3. Install with:
+* install [go](https://golang.org/doc/install?download=go1.13.linux-amd64.tar.gz)
 
 ```sh
 sudo apt-get install python3
