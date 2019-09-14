@@ -1,5 +1,9 @@
 *.swp
 *.pyc
+bazel-bin
+bazel-genfiles
+bazel-out
+bazel-testlogs
+bazel-stockbuddy
 virtualenv/
 __pycache__/
-
