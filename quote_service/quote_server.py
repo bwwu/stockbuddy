@@ -1,6 +1,6 @@
 import quote_service_pb2
 import quote_service_pb2_grpc
-from YahooFinanceCrawler import YahooFinanceCrawler
+from yahoo_finance_crawler import YahooFinanceCrawler
 
 class QuoteServer(quote_service_pb2_grpc.QuoteServiceServicer):
     def ListQuoteHistory(self, request, cxt):
