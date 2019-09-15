@@ -1,6 +1,6 @@
 import datetime
 import requests
-import quote_service_pb2
+import quote_pb2
 
 class YahooFinanceCrawler:
     # PRF=t%3D<SYMBOL>
@@ -32,7 +32,7 @@ class YahooFinanceCrawler:
 
 
 def createQuoteProtoFromRow(symbol, rowItems):
-    quote = quote_service_pb2.Quote()
+    quote = quote_pb2.Quote()
     quote.symbol = symbol
     quote.timestamp = int(datetime.datetime.strptime(rowItems[0], '%Y-%m-%d').timestamp())
     quote.open = float(rowItems[1])
