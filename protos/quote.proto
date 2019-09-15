@@ -1,5 +1,6 @@
 syntax = "proto3";
 package stockbuddy;
+option go_package = "stockbuddy/protos/quote_go_proto";
 
 message Quote {
 	string symbol = 1;
