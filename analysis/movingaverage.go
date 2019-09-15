@@ -2,6 +2,7 @@ package main
 
 import (
   "context"
+  "errors"
   "log"
   "google.golang.org/grpc"
   quotepb "stockbuddy/protos/quote_go_proto"
@@ -25,8 +26,19 @@ func main() {
 
   log.Printf("Num rows returned=%d", len(quoteResponse.Quotes))
   for _, quote := range quoteResponse.Quotes {
-    log.Printf("close=%f", quote.Close)
-  } 
-  
+    log.Printf("close=%v", quote.Close)
+  }
   conn.Close()
+}
+
+func NDayMovingAverage(n int, series []quotepb.Quote) (float64, error) {
+  if len(series) < n {
+    return 0., errors.New("Series len must be >= n")
+  }
+  accum := float64(0.0)
+  for _, quote := range series {
+    accum += quote.Close
+  }
+
+  return accum/float64(len(series)), nil
 }

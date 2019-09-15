@@ -5,11 +5,11 @@ option go_package = "stockbuddy/protos/quote_go_proto";
 message Quote {
 	string symbol = 1;
 	int32 timestamp = 2;
-	float open = 3;
-	float high = 4;
-	float low = 5;
-	float close = 6;
-	float adj_close = 7;
+	double open = 3;
+	double high = 4;
+	double low = 5;
+	double close = 6;
+	double adj_close = 7;
 	int32 volume = 8;
 }
 
