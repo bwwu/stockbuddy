@@ -5,5 +5,6 @@ go_binary(
   srcs = ["movingaverage.go"],
   deps = [
     "//protos:quote_go_proto",
+    "@org_golang_google_grpc//:go_default_library",
   ],
 )

@@ -10,6 +10,7 @@ proto_library(
 
 go_proto_library(
   name = "quote_go_proto",
+  compiler = "@io_bazel_rules_go//proto:go_grpc",
   importpath ="stockbuddy/protos/quote_go_proto",
   proto = ":quote_proto",
 )
