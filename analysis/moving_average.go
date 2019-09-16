@@ -1,37 +1,76 @@
-package main
+package moving_average
 
 import (
-  "context"
   "errors"
   "fmt"
   "log"
-  "google.golang.org/grpc"
   quotepb "stockbuddy/protos/quote_go_proto"
 )
 
-func main() {
-  conn, err := grpc.Dial("localhost:50051", grpc.WithInsecure())
-  if err != nil {
-    log.Fatal(err.Error())
+type Crossover int
+
+const (
+    None Crossover = iota
+    Bearish
+    Bullish
+)
+
+type MovingAverageSeries struct {
+  Term int
+  quotes []*quotepb.Quote
+}
+
+func NewMovingAverageSeries(term int, quotes []*quotepb.Quote) (*MovingAverageSeries, error) {
+  if term <= 0 {
+    return nil, errors.New("MovingAverageSeries Term must be > 0")
   }
-  client := quotepb.NewQuoteServiceClient(conn)
-
-  quoteResponse, err := client.ListQuoteHistory(
-    context.Background(),
-    &quotepb.QuoteRequest{Symbol: "GOOG", Period: 200},
-  )
-
-  if err != nil {
-    log.Panic(err.Error())
+  if len(quotes) < term + 1{
+    return nil, errors.New(fmt.Sprintf("MovingAverageSeries Term %d must be less than the quote len %d", term, len(quotes)))
   }
+  series := new(MovingAverageSeries)
+  series.Term = term
+  series.quotes = quotes
+  return series, nil
+}
 
-  log.Printf("Num rows returned=%d", len(quoteResponse.Quotes))
-  //for _, quote := range quoteResponse.Quotes {
-    //log.Printf("close=%v", quote.Close)
-  //}
-  ma, _ := NDayMovingAverageWithOffset(50, 0, quoteResponse.Quotes)
-  log.Print(ma)
-  conn.Close()
+func (series *MovingAverageSeries) GetAtDelta(delta int) (float64, error) {
+  return NDayMovingAverageWithOffset(series.Term, delta, series.quotes)
+}
+
+// GetMovingAverageCrossover
+func GetMovingAverageCrossover(shortTerm int, longTerm int, quotes []*quotepb.Quote) (Crossover, error) {
+  if shortTerm >= longTerm || shortTerm <= 0 {
+    return None, errors.New(fmt.Sprintf("Invalid long(%d) and short(%d) term values for series.", longTerm, shortTerm))
+  }
+  shortSeries, err := NewMovingAverageSeries(shortTerm, quotes)
+  if err != nil {
+    return None, err
+  }
+  longSeries, err := NewMovingAverageSeries(longTerm, quotes)
+  if err != nil {
+    return None, err
+  }
+  // Can ignore errs for delta <= 1
+  shortMA, _ := shortSeries.GetAtDelta(0)
+  shortMAMinus1, _ := shortSeries.GetAtDelta(1)
+  longMA, _ := longSeries.GetAtDelta(0)
+  longMAMinus1, _ := longSeries.GetAtDelta(1)
+
+  // If product of the deltas <= 0, there was a crossover
+  delta0 := shortMA - longMA
+  delta1 := shortMAMinus1 - longMAMinus1
+
+  if delta0*delta1 <= 0 {
+    log.Printf("%d/%d-MA Crossover detected.\n", shortTerm, longTerm)
+    if delta0 >= 0 && delta1 < 0 || delta0 > 0 && delta1 == 0 {
+      return Bullish, nil
+    } else if delta0 < 0 && delta1 >= 0 || delta0 == 0 && delta1 >0 {
+      return Bearish, nil
+    }
+    // Bug when both are 0. Need to look back further.
+    return None, nil
+  }
+  return None, nil
 }
 
 // NDayMovingAverageWithOffset calculates N-day moving average for a quote series ordered

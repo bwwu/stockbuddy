@@ -18,7 +18,7 @@ class YahooFinanceCrawler:
         periodEnd = datetime.datetime.now()
         periodStart = periodEnd - datetime.timedelta(days=days)
         url = YahooFinanceCrawler.BASE_URL.format(symbol, int(periodStart.timestamp()), int(periodEnd.timestamp()))
-        
+
         r = requests.get(url, cookies = cookiesForRequest)
 
         quoteProtos = []
