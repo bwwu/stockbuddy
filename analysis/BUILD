@@ -24,6 +24,7 @@ go_binary(
   deps = [
     ":moving_average",
     "//protos:quote_go_proto",
+    "//smtp:sendmail",
     "@org_golang_google_grpc//:go_default_library",
   ],
 )
