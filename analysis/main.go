@@ -6,7 +6,7 @@ import (
   "google.golang.org/grpc"
 
   "stockbuddy/smtp/sendmail"
-  ma "stockbuddy/analysis/moving_average"
+  ma "stockbuddy/analysis/moving_average/moving_average"
   quotepb "stockbuddy/protos/quote_go_proto"
 )
 

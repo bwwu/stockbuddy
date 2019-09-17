@@ -2,7 +2,7 @@ package moving_average_test
 
 import (
   "testing"
-  ma "stockbuddy/analysis/moving_average"
+  ma "stockbuddy/analysis/moving_average/moving_average"
   quotepb "stockbuddy/protos/quote_go_proto"
 )
 // Crossover tests
