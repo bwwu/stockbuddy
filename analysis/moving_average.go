@@ -1,6 +1,7 @@
 package moving_average
 
 import (
+  "bytes"
   "errors"
   "fmt"
   "log"
@@ -123,4 +124,35 @@ func NDayMovingAverageWithOffset(n int, offset int, series []*quotepb.Quote) (fl
     accum += quote.Close
   }
   return accum/float64(n), nil
+}
+
+// GetSummaryTable returns an html formatted summary table.
+func GetSummaryTable(summaries []*MovingAverageCrossoverSummary) string {
+  var b bytes.Buffer
+  table :="<table  cellspacing=\"0\" cellpadding=\"0\" width=\"640\" align=\"center\" border=\"1\">\n"
+  heading := "<tr><th>SYM</th><th>12DMA</th><th>12DMAΔ</th><th>48DMA</th><th>48DMAΔ</th><th>SIGNAL</th></tr>\n"
+
+  b.WriteString(table)
+  b.WriteString(heading)
+
+  for _, s := range summaries {
+   b.WriteString(formatMACrossoverRow(s))
+  }
+  b.WriteString("</table>")
+  return b.String()
+}
+
+func formatMACrossoverRow(s *MovingAverageCrossoverSummary) string {
+  shortDelta := s.ShortMA - s.ShortMAMinus1
+  longDelta := s.LongMA - s.LongMAMinus1
+
+  var signal string
+  if s.Crossover == Bullish {
+    signal = "BUY"
+  } else {
+    signal = "SELL"
+  }
+
+  template := "<tr><td>%s</td><td>%.2f</td><td>%.2f</td><td>%.2f</td><td>%.2f</td><td>%s</td></tr>\n"
+  return fmt.Sprintf(template, s.Symbol, s.ShortMA, shortDelta, s.LongMA, longDelta, signal)
 }

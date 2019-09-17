@@ -2,7 +2,6 @@ package main
 
 import (
   "context"
-  "fmt"
   "log"
   "google.golang.org/grpc"
 
@@ -42,6 +41,42 @@ var symbols = []string{
   "WMT",
   "DIS",
   "DOW",
+  "WM",
+  "HQY",
+  "SNPS",
+  "WIX",
+  "ZNGA",
+  "OLLI",
+  "HRC",
+  "TWLO",
+  "NTDOY",
+  "APPN",
+  "HA",
+  "TWLO",
+  "TLK",
+  "MA",
+  "ZBRA",
+  "ZS",
+  "AMZN",
+  "SQ",
+  "UNP",
+  "SFIX",
+  "ALK",
+  "ANET",
+  "BB",
+  "SFIX",
+  "AMGN",
+  "WIX",
+  "NEWR",
+  "SHOP",
+  "SHOP",
+  "OKTA",
+  "MKL",
+  "CRUS",
+  "VRNS",
+  "FICO",
+  "PAYC",
+  "OKTA",
 }
 
 func main() {
@@ -50,61 +85,31 @@ func main() {
     log.Fatal(err.Error())
   }
   client := quotepb.NewQuoteServiceClient(conn)
-
-  searchSymbolsForCrossover(client, symbols)
-
-//  quoteResponse, err := client.ListQuoteHistory(
-//    context.Background(),
-//    &quotepb.QuoteRequest{Symbol: "GOOG", Period: 365},
-//  )
-//
-//  log.Printf("Num rows returned=%d", len(quoteResponse.Quotes))
-//  ma, _ := ma.NDayMovingAverageWithOffset(50, 0, quoteResponse.Quotes)
-//  log.Print(ma)
+  searchSymbolsForMACrossover(client, symbols)
   conn.Close()
 }
 
-var heading = "<tr><th>SYM</th><th>12DMA</th><th>12DMAΔ</th><th>48DMA</th><th>48DMAΔ</th><th>SIGNAL</th></tr>\n"
-
-func searchSymbolsForCrossover(c quotepb.QuoteServiceClient, symbols []string) {
+func searchSymbolsForMACrossover(c quotepb.QuoteServiceClient, symbols []string) {
   crossovers := make([]*ma.MovingAverageCrossoverSummary, 0)
   for _, symbol := range symbols {
-    summary := calculateMACrossoverForSymbol(c, symbol)
+    summary := calculateMACrossover(c, symbol)
     if summary != nil {
       crossovers = append(crossovers, summary)
     }
   }
   if len(crossovers) > 0 {
-    subject := "12/48-Day MA Crossover detected"
+    subject := "[TradeBot] 12/48-Day MA Crossover detected"
     recipients := []string{"brandonwu23@gmail.com"}
     log.Printf("%d crossovers found\n", len(crossovers))
-    body := "<p>The following symbols have emitted a 12/48-day MA Crossover signal</p>"
-    body = body + "<table  cellspacing=\"0\" cellpadding=\"0\" width=\"640\" align=\"center\" border=\"1\">\n" + heading
-    for _, c := range crossovers {
-      body = body + formatMACrossoverRow(c)
-    }
-    body = body + "</table>"
+    body := "<p>The following stocks have emitted a 12/48-day MA Crossover signal:</p>"
+
+    body = body + ma.GetSummaryTable(crossovers)
     email := sendmail.Email{body, subject, recipients}
     email.Send()
   }
 }
 
-func formatMACrossoverRow(s *ma.MovingAverageCrossoverSummary) string {
-  shortDelta := s.ShortMA - s.ShortMAMinus1
-  longDelta := s.LongMA - s.LongMAMinus1
-
-  var signal string
-  if s.Crossover == ma.Bullish {
-    signal = "BUY"
-  } else {
-    signal = "SELL"
-  }
-
-  template := "<tr><td>%s</td><td>%.2f</td><td>%.2f</td><td>%.2f</td><td>%.2f</td><td>%s</td></tr>\n"
-  return fmt.Sprintf(template, s.Symbol, s.ShortMA, shortDelta, s.LongMA, longDelta, signal)
-}
-
-func calculateMACrossoverForSymbol(c quotepb.QuoteServiceClient, symbol string) *ma.MovingAverageCrossoverSummary {
+func calculateMACrossover(c quotepb.QuoteServiceClient, symbol string) *ma.MovingAverageCrossoverSummary {
   req := &quotepb.QuoteRequest{Symbol: symbol, Period: 365}
   resp, err := c.ListQuoteHistory(context.Background(), req)
 

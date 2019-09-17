@@ -18,7 +18,7 @@ func (e *Email) Send() error {
     log.Println(err.Error())
     return err
 	}
-	log.Println("Sent!")
+	log.Printf("Email(s) sent to %s", strings.Join(e.Recipients, ","))
   return nil
 }
 
