@@ -98,11 +98,11 @@ func searchSymbolsForMACrossover(c quotepb.QuoteServiceClient, symbols []string)
     }
   }
   if len(crossovers) > 0 {
-    subject := "[TradeBot] 12/48-Day MA Crossover detected"
+    subject := "12/48-Day MA Crossover detected"
     recipients := []string{"brandonwu23@gmail.com"}
     log.Printf("%d crossovers found\n", len(crossovers))
-    body := "<p>The following stocks have emitted a 12/48-day MA Crossover signal:</p>"
 
+    body := "<p>The following stocks have emitted a 12/48-day MA Crossover signal...</p>\n"
     body = body + ma.GetSummaryTable(crossovers)
     email := sendmail.Email{body, subject, recipients}
     email.Send()

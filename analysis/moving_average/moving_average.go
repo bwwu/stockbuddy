@@ -129,7 +129,7 @@ func NDayMovingAverageWithOffset(n int, offset int, series []*quotepb.Quote) (fl
 // GetSummaryTable returns an html formatted summary table.
 func GetSummaryTable(summaries []*MovingAverageCrossoverSummary) string {
   var b bytes.Buffer
-  table :="<table  cellspacing=\"0\" cellpadding=\"0\" width=\"640\" align=\"center\" border=\"1\">\n"
+  table :="<table width=\"640\" align=\"center\" border=\"1\">\n"
   heading := "<tr><th>SYM</th><th>12DMA</th><th>12DMAΔ</th><th>48DMA</th><th>48DMAΔ</th><th>SIGNAL</th></tr>\n"
 
   b.WriteString(table)
