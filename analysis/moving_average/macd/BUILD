@@ -14,5 +14,8 @@ go_library(
 go_test(
   name = "macd_test",
   srcs = ["macd_test.go"],
-  deps = [":macd"],
+  deps = [
+    ":macd",
+    "//analysis/moving_average/sma:sma",
+  ],
 )

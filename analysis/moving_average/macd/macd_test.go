@@ -3,12 +3,15 @@ package macd_test
 import (
   "testing"
   "stockbuddy/analysis/moving_average/macd/macd"
+  "stockbuddy/analysis/moving_average/sma/sma"
 )
 
 
 func TestMACD(t *testing.T) {
   macd := macd.MovingAverageConvergenceDivergenceSeries(testSeries)
+  signalLine := sma.ExponentialMovingAverage(9, macd)
   testFloatEquals(t, 15.897515583845006, macd[len(macd)-1])
+  testFloatEquals(t, 1., macd[len(macd)-1] - signalLine)
 }
 
 // Helper functions
