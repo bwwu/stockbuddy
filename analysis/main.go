@@ -6,78 +6,10 @@ import (
   "google.golang.org/grpc"
 
   "stockbuddy/smtp/sendmail"
+  stw "stockbuddy/analysis/stocks_to_watch"
   ma "stockbuddy/analysis/moving_average/moving_average"
   quotepb "stockbuddy/protos/quote_go_proto"
 )
-
-var symbols = []string{
-  "AXP",
-  "AAPL",
-  "BA",
-  "CAT",
-  "CSCO",
-  "CVX",
-  "XOM",
-  "GS",
-  "HD",
-  "IBM",
-  "INTC",
-  "JNJ",
-  "KO",
-  "JPM",
-  "MCD",
-  "MMM",
-  "MRK",
-  "MSFT",
-  "NKE",
-  "PFE",
-  "PG",
-  "TRV",
-  "UNH",
-  "UTX",
-  "VZ",
-  "V",
-  "WBA",
-  "WMT",
-  "DIS",
-  "DOW",
-  "WM",
-  "HQY",
-  "SNPS",
-  "WIX",
-  "ZNGA",
-  "OLLI",
-  "HRC",
-  "TWLO",
-  "NTDOY",
-  "APPN",
-  "HA",
-  "TWLO",
-  "TLK",
-  "MA",
-  "ZBRA",
-  "ZS",
-  "AMZN",
-  "SQ",
-  "UNP",
-  "SFIX",
-  "ALK",
-  "ANET",
-  "BB",
-  "SFIX",
-  "AMGN",
-  "WIX",
-  "NEWR",
-  "SHOP",
-  "SHOP",
-  "OKTA",
-  "MKL",
-  "CRUS",
-  "VRNS",
-  "FICO",
-  "PAYC",
-  "OKTA",
-}
 
 func main() {
   conn, err := grpc.Dial("localhost:50051", grpc.WithInsecure())
@@ -85,7 +17,7 @@ func main() {
     log.Fatal(err.Error())
   }
   client := quotepb.NewQuoteServiceClient(conn)
-  searchSymbolsForMACrossover(client, symbols)
+  searchSymbolsForMACrossover(client, stw.StocksToWatch)
   conn.Close()
 }
 

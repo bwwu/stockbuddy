@@ -4,6 +4,7 @@ import (
     "fmt"
     "errors"
 )
+
 /**
  * RelativeStrengthIndex calculates N-period RSI for a price series.
  * Price series should ordered in descending order of age (oldest first).

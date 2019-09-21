@@ -6,9 +6,6 @@ go_library(
   name = "rsi",
   srcs = ["rsi.go"],
   importpath = "stockbuddy/analysis/rsi/rsi",
-  deps = [
-    "//protos:quote_go_proto",
-  ],
 )
 
 go_test(
