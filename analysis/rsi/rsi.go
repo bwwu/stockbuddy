@@ -6,14 +6,14 @@ import (
 )
 
 /**
- * RelativeStrengthIndex calculates N-period RSI for a price series.
+ * RelativeStrengthIndexSeries calculates N-period RSI for a price series.
  * Price series should ordered in descending order of age (oldest first).
  * Requires that the series length is at least N+2.
  */
-func RelativeStrengthIndex(n int, prices []float64) (float64, error) {
+func RelativeStrengthIndexSeries(n int, prices []float64) ([]float64, error) {
   // Need a minimum of N+3 prices to calculate N-period RSI.
   if len(prices) < n+2 {
-    return 0., errors.New(fmt.Sprintf("length of price series %d is insuficient for N=%d", len(prices), n))
+    return nil, errors.New(fmt.Sprintf("length of price series %d is insuficient for N=%d", len(prices), n))
   }
   // diff function shifts series +1
   deltas := diff(prices)
@@ -33,16 +33,28 @@ func RelativeStrengthIndex(n int, prices []float64) (float64, error) {
   avgUp := average(ups[:n])
   avgDown := average(downs[:n])
 
+  rsi := make([]float64, len(prices)-n-1)
+
   // Starting at day N+2
   for i := n; i < len(deltas); i++ {
     // Calculate "smoothed" averages
     avgUp = (float64(n-1)*avgUp + ups[i])/float64(n)
     avgDown = (float64(n-1)*avgDown + downs[i])/float64(n)
+    rs := avgUp/avgDown
+    rsi[i-n] = 100. - 100./(1.+rs)
   }
-  rs := avgUp/avgDown
-  return 100. - 100./(1.+rs),nil
+  return rsi, nil
 }
 
+func RelativeStrengthIndex(n int, prices []float64) (float64, error) {
+  series, err := RelativeStrengthIndexSeries(n, prices)
+  if err != nil {
+    return 0., err
+  }
+  return series[len(series)-1], nil
+}
+
+// Helper functions
 func average(values []float64) float64 {
   accum := 0.
   for _, val := range values {
