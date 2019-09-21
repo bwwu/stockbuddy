@@ -5,6 +5,7 @@ import (
   "errors"
   "fmt"
   "log"
+  "stockbuddy/analysis/moving_average/sma/sma"
   quotepb "stockbuddy/protos/quote_go_proto"
 )
 
@@ -43,20 +44,20 @@ func NewMovingAverageCrossoverSummary(shortTerm int, longTerm int, quotes []*quo
   if shortTerm >= longTerm || shortTerm <= 0 {
     return nil, errors.New(fmt.Sprintf("Invalid long(%d) and short(%d) term values for series.", longTerm, shortTerm))
   }
-  shortSeries, err := NewMovingAverageSeries(shortTerm, quotes)
-  if err != nil {
-    return nil, err
+
+  if len(quotes) < longTerm+1 {
+    return nil, errors.New(fmt.Sprintf("Unable to compute N-series SMA with N=%d for series length %d", longTerm, len(quotes)))
   }
-  longSeries, err := NewMovingAverageSeries(longTerm, quotes)
-  if err != nil {
-    return nil, err
+  prices := make([]float64, longTerm+1)
+  for i:=0; i<len(prices); i++ {
+    prices[i] = quotes[i].Close
   }
 
   // Can ignore errs for delta <= 1
-  shortMA, _ := shortSeries.GetAtDelta(0)
-  shortMAMinus1, _ := shortSeries.GetAtDelta(1)
-  longMA, _ := longSeries.GetAtDelta(0)
-  longMAMinus1, _ := longSeries.GetAtDelta(1)
+  shortMA := sma.SimpleMovingAverage(shortTerm, prices)
+  shortMAMinus1 := sma.SimpleMovingAverage(shortTerm, prices[:len(prices)-1])
+  longMA := sma.SimpleMovingAverage(longTerm, prices)
+  longMAMinus1 := sma.SimpleMovingAverage(longTerm, prices[:len(prices)-1])
 
   // If product of the deltas <= 0, there was a crossover
   delta0 := shortMA - longMA

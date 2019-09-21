@@ -9,7 +9,7 @@ import (
 // first).
 func SimpleMovingAverage(n int, prices []float64) float64 {
   if len(prices) < n {
-    log.Fatal("Price series length must be >= N")
+    log.Fatalf("Price series length (%d) must be >= N (%d)", len(prices), n)
   }
   sum := 0.
   for _, price := range prices[len(prices)-n:] {

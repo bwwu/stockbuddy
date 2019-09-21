@@ -7,6 +7,7 @@ go_library(
   srcs = ["moving_average.go"],
   importpath = "stockbuddy/analysis/moving_average/moving_average",
   deps = [
+    "//analysis/moving_average/sma:sma",
     "//protos:quote_go_proto",
   ],
 )
