@@ -5,6 +5,7 @@ import (
   ma "stockbuddy/analysis/moving_average/moving_average"
   quotepb "stockbuddy/protos/quote_go_proto"
 )
+
 // Crossover tests
 func TestBullishCrossover(t *testing.T) {
   quotes := createQuoteSeriesFromFloats([]float64{50.,30.,20.,100.})
@@ -24,29 +25,13 @@ func TestNoneCrossover(t *testing.T) {
   testCrossoverTypeEquals(t, ma.None, summary.Crossover)
 }
 
-// Moving avg tests
-func TestNDayMovingAverageWithOffset(t *testing.T) {
-  quotes := createQuoteSeriesFromFloats([]float64{1., 2., 3.})
-  twoDayMA, _ := ma.NDayMovingAverageWithOffset(2, 0, quotes)
-  testFloatEquals(t, "2-Day Moving Average", 2.5, twoDayMA)
-
-  twoDayMAWithOffset, _ := ma.NDayMovingAverageWithOffset(2, 1, quotes)
-  testFloatEquals(t, "2-Day Moving Average with offset", 1.5, twoDayMAWithOffset)
-}
-
-// Helper utilities
+// Helper utils
 func createQuoteSeriesFromFloats(prices []float64) []*quotepb.Quote {
   series := make([]*quotepb.Quote, len(prices))
   for i, price := range prices {
     series[i] = &quotepb.Quote{Close: price, Symbol: ""}
   }
   return series
-}
-
-func testFloatEquals(t *testing.T, label string,  expected float64, actual float64) {
-  if actual != expected {
-    t.Errorf("%s failed. Expected %v, but got %v", label, expected, actual)
-  }
 }
 
 func testCrossoverTypeEquals(t *testing.T, expected ma.CrossoverType, actual ma.CrossoverType) {
