@@ -13,6 +13,8 @@ go_binary(
   deps = [
     ":stocks_to_watch",
     "//analysis/moving_average:moving_average",
+    "//analysis/moving_average/crossover:crossover",
+    "//analysis/moving_average/crossover:crossover_reporter",
     "//protos:quote_go_proto",
     "//smtp:sendmail",
     "@org_golang_google_grpc//:go_default_library",

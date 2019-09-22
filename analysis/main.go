@@ -8,6 +8,8 @@ import (
   "stockbuddy/smtp/sendmail"
   stw "stockbuddy/analysis/stocks_to_watch"
   ma "stockbuddy/analysis/moving_average/moving_average"
+  cr "stockbuddy/analysis/moving_average/crossover/crossover_reporter"
+  "stockbuddy/analysis/moving_average/crossover/crossover"
   quotepb "stockbuddy/protos/quote_go_proto"
 )
 
@@ -22,7 +24,7 @@ func main() {
 }
 
 func searchSymbolsForMACrossover(c quotepb.QuoteServiceClient, symbols []string) {
-  crossovers := make([]*ma.MovingAverageCrossoverSummary, 0)
+  crossovers := make([]*cr.CrossoverReporter, 0)
   for _, symbol := range symbols {
     summary := calculateMACrossover(c, symbol)
     if summary != nil {
@@ -41,7 +43,7 @@ func searchSymbolsForMACrossover(c quotepb.QuoteServiceClient, symbols []string)
   }
 }
 
-func calculateMACrossover(c quotepb.QuoteServiceClient, symbol string) *ma.MovingAverageCrossoverSummary {
+func calculateMACrossover(c quotepb.QuoteServiceClient, symbol string) *cr.CrossoverReporter {
   req := &quotepb.QuoteRequest{Symbol: symbol, Period: 365}
   resp, err := c.ListQuoteHistory(context.Background(), req)
 
@@ -50,14 +52,14 @@ func calculateMACrossover(c quotepb.QuoteServiceClient, symbol string) *ma.Movin
     return nil
   }
 
-  summary, err := ma.NewMovingAverageCrossoverSummary(12, 48, resp.Quotes)
+  summary, err := ma.NewMovingAverageCrossoverReporter(12, 48, resp.Quotes)
   if err != nil {
     log.Println(err.Error())
     return nil
   }
-  if summary.Crossover == ma.None {
+  if summary.GetCrossover() == crossover.None {
     return nil
   }
-  log.Printf("%s MA-Crossover found for \"%s\"", summary.Crossover.String(), symbol)
+  log.Printf("%s MA-Crossover found for \"%s\"", summary.GetCrossover().String(), symbol)
   return summary
 }
