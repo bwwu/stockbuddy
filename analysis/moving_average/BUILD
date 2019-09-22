@@ -8,6 +8,7 @@ go_library(
   importpath = "stockbuddy/analysis/moving_average/moving_average",
   deps = [
     "//analysis/moving_average/sma:sma",
+    "//analysis/moving_average/crossover:crossover_reporter",
     "//protos:quote_go_proto",
   ],
 )

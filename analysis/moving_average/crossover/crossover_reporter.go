@@ -13,7 +13,7 @@ type CrossoverReporter struct {
   Crossovers []crossover.CrossoverType
 }
 
-func NewCrossoverRepoter(cname, symbol, snameA, snameB string, sA, sB []float64) *CrossoverReporter {
+func NewCrossoverReporter(cname, symbol, snameA, snameB string, sA, sB []float64) *CrossoverReporter {
   reporter := &CrossoverReporter{
     Name: cname,
     Symbol: symbol,
