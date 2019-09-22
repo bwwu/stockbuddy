@@ -57,6 +57,17 @@ func (reporter *CrossoverReporter) GetTableHeader() string {
   return getRow(true, headerValues)
 }
 
+func (reporter *CrossoverReporter) GetGenericTableHeader() string {
+  headerValues := []string{
+    "Indicator",
+    "Symbol",
+    "Series A",
+    "Series B",
+    "Signal",
+  }
+  return getRow(true, headerValues)
+}
+
 func getRow(isHeader bool, values []string) string {
   tag := "td"
   if isHeader {

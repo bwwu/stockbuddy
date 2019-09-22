@@ -27,7 +27,7 @@ func NewMovingAverageCrossoverReporter(shortTerm int, longTerm int, quotes []*qu
   shortMA := sma.SimpleMovingAverageSeries(shortTerm, prices)
   longMA := sma.SimpleMovingAverageSeries(longTerm, prices)
 
-  reporter := cr.NewCrossoverReporter("12-48 SMA", quotes[0].Symbol, "12-Day SMA", "48-Day SMA", shortMA, longMA)
+  reporter := cr.NewCrossoverReporter("SMA(12,48)", quotes[0].Symbol, "12-Day SMA", "48-Day SMA", shortMA, longMA)
   return reporter, nil
 }
 
@@ -35,13 +35,13 @@ func NewMovingAverageCrossoverReporter(shortTerm int, longTerm int, quotes []*qu
 func GetSummaryTable(summaries []*cr.CrossoverReporter) string {
   var b bytes.Buffer
   table :="<table width=\"640\" align=\"center\" border=\"1\">\n"
-  heading := "<tr><th>SYM</th><th>12DMA</th><th>48DMA</th><th>SIGNAL</th></tr>\n"
+  //heading := "<tr><th>SYM</th><th>12DMA</th><th>48DMA</th><th>SIGNAL</th></tr>\n"
 
   b.WriteString(table)
-  b.WriteString(heading)
+  b.WriteString(summaries[0].GetGenericTableHeader())
 
   for _, r := range summaries {
-   b.WriteString(r.GetTableRow(false))
+   b.WriteString(r.GetTableRow(true))
   }
   b.WriteString("</table>")
   return b.String()
