@@ -19,11 +19,11 @@ func NewMovingAverageCrossoverReporter(shortTerm int, longTerm int, quotes []*qu
     return nil, errors.New(fmt.Sprintf("Unable to compute N-series SMA with N=%d for series length %d", longTerm, len(quotes)))
   }
 
+  quotes = quotes[len(quotes)-longTerm-1:]
   prices := make([]float64, longTerm+1)
   for i:=0; i<len(prices); i++ {
     prices[i] = quotes[i].Close
   }
-
   shortMA := sma.SimpleMovingAverageSeries(shortTerm, prices)
   longMA := sma.SimpleMovingAverageSeries(longTerm, prices)
 
