@@ -1,8 +1,8 @@
 package detectors
 
 import (
-  "stockbuddy/analysis/moving_average/macd/macd"
-  "stockbuddy/analysis/moving_average/sma/sma"
+  "stockbuddy/analysis/lib/macd"
+  "stockbuddy/analysis/lib/sma"
   cr "stockbuddy/analysis/moving_average/crossover/crossover_reporter"
   quotepb "stockbuddy/protos/quote_go_proto"
 )

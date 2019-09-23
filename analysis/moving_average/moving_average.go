@@ -4,7 +4,7 @@ import (
   "bytes"
   "errors"
   "fmt"
-  "stockbuddy/analysis/moving_average/sma/sma"
+  "stockbuddy/analysis/lib/sma"
   cr "stockbuddy/analysis/moving_average/crossover/crossover_reporter"
   quotepb "stockbuddy/protos/quote_go_proto"
 )

@@ -1,7 +1,7 @@
 package macd
 
 import (
-  "stockbuddy/analysis/moving_average/sma/sma"
+  "stockbuddy/analysis/lib/sma"
 )
 
 // MovingAverageConvergenceDivergenceSeries calculates the difference between

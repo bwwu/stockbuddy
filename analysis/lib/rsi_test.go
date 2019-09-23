@@ -2,7 +2,7 @@ package rsi_test
 
 import (
   "testing"
-  "stockbuddy/analysis/rsi/rsi"
+  "stockbuddy/analysis/lib/rsi"
 )
 
 func TestRsi14(t *testing.T) {
