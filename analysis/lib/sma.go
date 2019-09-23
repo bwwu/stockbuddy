@@ -4,9 +4,11 @@ import (
   "log"
 )
 
-// SimpleMovingAverage calculates the N-period arthmetic average of a price
-// series. Assumes prices are ordered in descending order of age (oldest
-// first).
+/**
+ * SimpleMovingAverage calculates the N-period arthmetic mean of a price
+ * series. Assumes prices are ordered in descending order of age (oldest
+ * first).
+ */
 func SimpleMovingAverage(n int, prices []float64) float64 {
   if len(prices) < n {
     log.Fatalf("Price series length (%d) must be >= N (%d)", len(prices), n)
@@ -29,7 +31,11 @@ func SimpleMovingAverageSeries(n int, prices []float64) []float64 {
   return series
 }
 
-// ExponentialMovingAverage
+/**
+ * ExponentialMovingAverage calculates the weighted average of a price series
+ * Using the formula: EMA(t) = A*Price(t) + (A-1)*EMA(t-1)
+ * Where A = 2/(N+1). EMA(0) = Price(0)
+ */
 func ExponentialMovingAverage(n int, prices []float64) float64 {
   series := ExponentialMovingAverageSeries(n, prices)
   return series[len(series)-1]

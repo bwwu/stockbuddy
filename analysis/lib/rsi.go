@@ -3,6 +3,8 @@ package rsi
 import (
     "fmt"
     "errors"
+
+    "stockbuddy/analysis/lib/sma"
 )
 
 /**
@@ -29,9 +31,9 @@ func RelativeStrengthIndexSeries(n int, prices []float64) ([]float64, error) {
     }
   }
 
-  // Seed RS with average of first-N ups & downs (first N+1 days)
-  avgUp := average(ups[:n])
-  avgDown := average(downs[:n])
+  // Seed RS w arithmetic mean of first-N ups & downs (first N+1 days)
+  avgUp := sma.SimpleMovingAverage(n, ups[:n])
+  avgDown := sma.SimpleMovingAverage(n, downs[:n])
 
   rsi := make([]float64, len(prices)-n-1)
 
@@ -54,15 +56,7 @@ func RelativeStrengthIndex(n int, prices []float64) (float64, error) {
   return series[len(series)-1], nil
 }
 
-// Helper functions
-func average(values []float64) float64 {
-  accum := 0.
-  for _, val := range values {
-    accum += val
-  }
-  return accum/float64(len(values))
-}
-
+// Calculate price deltas, for t=0,...N, diff(t) = Price(t+1)-Price(t)
 func diff(prices []float64) []float64 {
   diffs := make([]float64, len(prices)-1)
   for i:=0; i<len(prices)-1; i++ {

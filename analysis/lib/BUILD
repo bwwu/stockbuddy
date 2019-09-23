@@ -5,6 +5,7 @@ package(default_visibility = ["//visibility:public"])
 go_library(
   name = "rsi",
   srcs = ["rsi.go"],
+  deps = [":sma"],
   importpath = "stockbuddy/analysis/lib/rsi",
 )
 
