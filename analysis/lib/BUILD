@@ -44,3 +44,18 @@ go_test(
     "//analysis/lib:sma",
   ],
 )
+
+go_library(
+  name = "bollinger",
+  srcs = ["bollinger.go"],
+  importpath = "stockbuddy/analysis/lib/bollinger",
+  deps = [
+    "//analysis/lib:sma",
+  ],
+)
+
+go_test(
+  name = "bollinger_test",
+  srcs = ["bollinger_test.go"],
+  deps = [":bollinger"],
+)
