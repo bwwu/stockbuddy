@@ -48,3 +48,13 @@ go_test(
     "//protos:quote_go_proto",
   ],
 )
+
+go_library(
+  name = "swing_rejection",
+	srcs = ["swing_rejection.go"],
+  importpath = "stockbuddy/analysis/detectors/swing_rejection",
+	deps = [
+		"//analysis/lib:constants",
+		"//analysis/lib:rsi",
+	],
+)

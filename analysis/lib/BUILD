@@ -3,6 +3,12 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 package(default_visibility = ["//visibility:public"])
 
 go_library(
+	name = "constants",
+	srcs = ["constants.go"],
+	importpath = "stockbuddy/analysis/lib/constants",
+)
+
+go_library(
   name = "rsi",
   srcs = ["rsi.go"],
   deps = [":sma"],
