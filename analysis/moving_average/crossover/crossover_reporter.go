@@ -4,13 +4,14 @@ import (
   "bytes"
   "fmt"
   "log"
+  "stockbuddy/analysis/constants"
   "stockbuddy/analysis/moving_average/crossover/crossover"
 )
 
 type CrossoverReporter struct {
   Name, Symbol, SeriesAName, SeriesBName string
   SeriesA, SeriesB []float64
-  Crossovers []crossover.CrossoverType
+  Crossovers []constants.Outlook
 }
 
 func NewCrossoverReporter(cname, symbol, snameA, snameB string, sA, sB []float64) *CrossoverReporter {
@@ -26,8 +27,8 @@ func NewCrossoverReporter(cname, symbol, snameA, snameB string, sA, sB []float64
   return reporter
 }
 
-// GetCrossover returns most recent series value for CrossoverType
-func (reporter *CrossoverReporter) GetCrossover() crossover.CrossoverType {
+// GetCrossover returns most recent series value for Outlook
+func (reporter *CrossoverReporter) GetCrossover() constants.Outlook {
   return reporter.Crossovers[len(reporter.Crossovers)-1]
 }
 

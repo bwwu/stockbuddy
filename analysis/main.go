@@ -10,7 +10,6 @@ import (
   ma "stockbuddy/analysis/moving_average/moving_average"
   macd "stockbuddy/analysis/detectors/macd_crossover"
   cr "stockbuddy/analysis/moving_average/crossover/crossover_reporter"
-  "stockbuddy/analysis/moving_average/crossover/crossover"
   quotepb "stockbuddy/protos/quote_go_proto"
 )
 
@@ -59,7 +58,7 @@ func calculateMACrossover(c quotepb.QuoteServiceClient, symbol string) []*cr.Cro
     log.Println(err.Error())
     return []*cr.CrossoverReporter{}
   }
-  if smaCrossover.GetCrossover() != crossover.None {
+  if smaCrossover.GetCrossover() != 0 {
     log.Printf("%s MA-Crossover found for \"%s\"", smaCrossover.GetCrossover().String(), symbol)
     crossovers = append(crossovers, smaCrossover)
   }
@@ -71,7 +70,7 @@ func calculateMACrossover(c quotepb.QuoteServiceClient, symbol string) []*cr.Cro
 
   // log.Printf("MACD for %s = %v\n", symbol, macdCrossover.SeriesA[len(macdCrossover.SeriesA)-1])
   // log.Printf("Signal line for %s = %v\n", symbol, macdCrossover.SeriesB[len(macdCrossover.SeriesB)-1])
-  if macdCrossover.GetCrossover() != crossover.None {
+  if macdCrossover.GetCrossover() != 0 {
     log.Printf("%s MACD-Crossover found for \"%s\"", smaCrossover.GetCrossover().String(), symbol)
     crossovers = append(crossovers, macdCrossover)
   }

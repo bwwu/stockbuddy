@@ -1,10 +1,16 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
 
-
 go_library(
   name = "stocks_to_watch",
   importpath = "stockbuddy/analysis/stocks_to_watch",
   srcs = ["stocks_to_watch.go"],
+)
+
+go_library(
+  name = "constants",
+  srcs = ["constants.go"],
+  importpath = "stockbuddy/analysis/constants",
+  visibility = ["//visibility:public"],
 )
 
 go_binary(
@@ -13,7 +19,6 @@ go_binary(
   deps = [
     ":stocks_to_watch",
     "//analysis/moving_average:moving_average",
-    "//analysis/moving_average/crossover:crossover",
     "//analysis/moving_average/crossover:crossover_reporter",
     "//analysis/detectors:macd_crossover",
     "//protos:quote_go_proto",
