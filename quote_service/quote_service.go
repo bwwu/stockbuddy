@@ -32,7 +32,7 @@ func (q *QuoteServer) ListQuoteHistory(ctx context.Context, req *pb.QuoteRequest
   for i, quote := range quotes.DailyQuotes {
     quoteProtos[i] = &pb.Quote{
       Symbol: req.Symbol,
-      Timestamp: int32(quote.Timestamp.Unix()),
+      Timestamp: quote.Timestamp.Unix(),
       Open: quote.Open,
       High: quote.High,
       Low: quote.Low,

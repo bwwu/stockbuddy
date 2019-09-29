@@ -4,13 +4,13 @@ option go_package = "stockbuddy/protos/quote_go_proto";
 
 message Quote {
 	string symbol = 1;
-	int32 timestamp = 2;
+	int64 timestamp = 2;
 	double open = 3;
 	double high = 4;
 	double low = 5;
 	double close = 6;
 	double adj_close = 7;
-	int32 volume = 8;
+	uint32 volume = 8;
 }
 
 message QuoteRequest {
