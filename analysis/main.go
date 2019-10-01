@@ -71,7 +71,7 @@ func calculateMACrossover(c quotepb.QuoteServiceClient, symbol string) []*cr.Cro
   // log.Printf("MACD for %s = %v\n", symbol, macdCrossover.SeriesA[len(macdCrossover.SeriesA)-1])
   // log.Printf("Signal line for %s = %v\n", symbol, macdCrossover.SeriesB[len(macdCrossover.SeriesB)-1])
   if macdCrossover.GetCrossover() != 0 {
-    log.Printf("%s MACD-Crossover found for \"%s\"", smaCrossover.GetCrossover().String(), symbol)
+    log.Printf("%s MACD-Crossover found for \"%s\"", macdCrossover.GetCrossover().String(), symbol)
     crossovers = append(crossovers, macdCrossover)
   }
   return crossovers
