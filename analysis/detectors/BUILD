@@ -13,3 +13,26 @@ go_library(
     "//protos:quote_go_proto",
   ],
 )
+
+go_library(
+  name = "sma_crossover",
+  srcs = ["sma_crossover.go"],
+  importpath = "stockbuddy/analysis/detectors/sma_crossover",
+  deps = [
+    "//analysis:constants",
+    "//analysis:insight",
+    "//analysis/lib:sma",
+    "//analysis/moving_average/crossover",
+    "//protos:quote_go_proto",
+  ],
+)
+
+go_test(
+  name = "sma_crossover_test",
+  srcs = ["sma_crossover_test.go"],
+  deps = [
+    ":sma_crossover",
+    "//analysis:constants",
+    "//protos:quote_go_proto",
+  ],
+)

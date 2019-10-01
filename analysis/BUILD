@@ -13,6 +13,19 @@ go_library(
   visibility = ["//visibility:public"],
 )
 
+go_library(
+  name = "insight",
+  srcs = [
+    "insight.go",
+  ],
+  importpath = "stockbuddy/analysis/insight",
+  visibility = ["//visibility:public"],
+  deps = [
+    "//analysis:constants",
+    "//protos:quote_go_proto",
+  ],
+)
+
 go_binary(
   name = "main",
   srcs = ["main.go"],
@@ -23,6 +36,17 @@ go_binary(
     "//analysis/detectors:macd_crossover",
     "//protos:quote_go_proto",
     "//smtp:sendmail",
+    "@org_golang_google_grpc//:go_default_library",
+  ],
+)
+
+go_binary(
+  name = "main_insight",
+  srcs = ["main_insight.go"],
+  deps = [
+    ":insight",
+    "//analysis/detectors:sma_crossover",
+    "//protos:quote_go_proto",
     "@org_golang_google_grpc//:go_default_library",
   ],
 )

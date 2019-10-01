@@ -18,3 +18,10 @@ func (r Outlook)  String() string {
       return "None"
   }
 }
+
+type Trend int
+
+const (
+  Reversal Trend = iota + 1
+  Continuation
+)
