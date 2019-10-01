@@ -4,7 +4,6 @@ import (
   "context"
   "log"
   "net"
-  "fmt"
 
   "google.golang.org/grpc"
   pb "stockbuddy/protos/quote_go_proto"
@@ -48,10 +47,13 @@ func (q *QuoteServer) ListQuoteHistory(ctx context.Context, req *pb.QuoteRequest
 func main() {
   list, err := net.Listen("tcp", "localhost:50051")
   if err != nil {
-    log.Fatal("Failed to listen on localhost:50051")
+    log.Fatalf("Failed to listen on :50051 due to error: %s", err.Error())
   }
   server := grpc.NewServer()
   pb.RegisterQuoteServiceServer(server, NewQuoteServer())
-  server.Serve(list)
-  fmt.Print("Listening on :50051")
+
+  log.Println("Starting quote service on localhost:50051...")
+  if err := server.Serve(list); err != nil {
+    log.Fatal(err.Error())
+  }
 }
