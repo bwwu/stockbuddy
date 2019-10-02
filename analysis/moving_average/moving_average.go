@@ -24,8 +24,8 @@ func NewMovingAverageCrossoverReporter(shortTerm int, longTerm int, quotes []*qu
   for i:=0; i<len(prices); i++ {
     prices[i] = quotes[i].Close
   }
-  shortMA := sma.SimpleMovingAverageSeries(shortTerm, prices)
-  longMA := sma.SimpleMovingAverageSeries(longTerm, prices)
+  shortMA,_ := sma.SimpleMovingAverageSeries(shortTerm, prices)
+  longMA, _ := sma.SimpleMovingAverageSeries(longTerm, prices)
 
   reporter := cr.NewCrossoverReporter("SMA(12,48)", quotes[0].Symbol, "12-Day SMA", "48-Day SMA", shortMA, longMA)
   return reporter, nil

@@ -1,6 +1,7 @@
 package moving_average_test
 
 import (
+  "log"
   "testing"
   "stockbuddy/analysis/lib/sma"
 )
@@ -9,8 +10,10 @@ import (
 func TestSimpleMovingAverage50(t *testing.T) {
   period := 50
   want := 1187.2912033799998
-  got := sma.SimpleMovingAverage(period, testSeries)
-
+  got, err := sma.SimpleMovingAverage(period, testSeries)
+  if err != nil {
+    log.Fatal(err)
+  }
   if want != got {
     t.Errorf("sma.SimpleMovingAverage(%v,%v) = %v, want %v", period, testSeries, got, want)
   }
@@ -19,7 +22,10 @@ func TestSimpleMovingAverage50(t *testing.T) {
 func TestSimpleMovingAverage200(t *testing.T) {
   period := 200
   want := 1140.4932497750003
-  got := sma.SimpleMovingAverage(period, testSeries)
+  got, err := sma.SimpleMovingAverage(period, testSeries)
+  if err != nil {
+    log.Fatal(err)
+  }
 
   if want != got {
     t.Errorf("sma.SimpleMovingAverage(%v,%v) = %v, want %v", period, testSeries, got, want)
@@ -28,10 +34,30 @@ func TestSimpleMovingAverage200(t *testing.T) {
 
 func TestSimpleMovingAverageSeries50(t *testing.T) {
   subSeries := testSeries[len(testSeries)-52:]
-  smaSeries := sma.SimpleMovingAverageSeries(50, subSeries)
+  period := 50
+  smaSeries, err := sma.SimpleMovingAverageSeries(period, subSeries)
+  if err != nil {
+    log.Fatal(err)
+  }
+
   testSliceLen(t, 3, smaSeries)
-  testFloatEquals(t, 1187.2912033799998, smaSeries[2])
-  testFloatEquals(t, sma.SimpleMovingAverage(50, testSeries[:len(testSeries)-1]), smaSeries[1])
+  if len(smaSeries) != 3 {
+    t.Errorf("len(sma.SimpleMovingAverageSeries(%v,%v)) = %v, want %v", period, testSeries, len(smaSeries), 3)
+  }
+  wantSMA2 := 1187.2912033799998
+  gotSMA2 := smaSeries[2]
+  if wantSMA2 != gotSMA2 {
+    t.Errorf("sma.SimpleMovingAverageSeries(%v,%v) = %v, want %v", period, testSeries, gotSMA2, wantSMA2)
+  }
+
+  wantSMA, err := sma.SimpleMovingAverage(period, testSeries[:len(testSeries)-1])
+  if err != nil {
+    log.Fatal(err)
+  }
+  gotSMA := smaSeries[1]
+  if wantSMA != gotSMA {
+    t.Errorf("sma.SimpleMovingAverageSeries(%v,%v) = %v, want %v", period, testSeries, gotSMA, wantSMA)
+  }
 }
 
 // Exponential Moving Average (EMA) tests

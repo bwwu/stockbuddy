@@ -1,6 +1,7 @@
 package sma
 
 import (
+  "fmt"
   "log"
 )
 
@@ -9,26 +10,30 @@ import (
  * series. Assumes prices are ordered in descending order of age (oldest
  * first).
  */
-func SimpleMovingAverage(n int, prices []float64) float64 {
+func SimpleMovingAverage(n int, prices []float64) (float64, error) {
+  if n < 1 {
+   return 0., fmt.Errorf("sma: invalid value for N=%v", n)
+  }
   if len(prices) < n {
-    log.Fatalf("Price series length (%d) must be >= N (%d)", len(prices), n)
+    return 0., fmt.Errorf("sma: price series length (%d) must be >= N (%d)", len(prices), n)
   }
   sum := 0.
   for _, price := range prices[len(prices)-n:] {
     sum += price
   }
-  return sum/float64(n)
+  return sum/float64(n), nil
 }
 
-func SimpleMovingAverageSeries(n int, prices []float64) []float64 {
-  if len(prices) < n {
-    log.Fatalf("Price series length (%d) must be >= N (%d)", len(prices), n)
-  }
+func SimpleMovingAverageSeries(n int, prices []float64) ([]float64, error) {
   series := make([]float64, len(prices)-n+1)
   for i:=0; i<len(series); i++ {
-    series[len(series)-i-1] = SimpleMovingAverage(n, prices[:len(prices)-i])
+    ma, err := SimpleMovingAverage(n, prices[:len(prices)-i])
+    if err != nil {
+      return nil, err
+    }
+    series[len(series)-i-1] = ma
   }
-  return series
+  return series, nil
 }
 
 /**

@@ -54,7 +54,7 @@ func (a *Analyzer) Analyze(ctx context.Context, symbol string) []Indicator {
   // Spawn goroutine per detector
   for _, d := range a.detectors {
     go func() {
-      if has, err := d.Process(resp.Quotes); err != nil {
+      if _, err := d.Process(resp.Quotes); err != nil {
         errc <- err
       } else {
         indicatorc <- d.Get()

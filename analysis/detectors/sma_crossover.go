@@ -18,7 +18,7 @@ type SimpleMovingAverageDetector struct {
 
 func NewSimpleMovingAverageDetector(shortTerm int, longTerm int) (*SimpleMovingAverageDetector, error) {
   if shortTerm >= longTerm || shortTerm <= 0 {
-    return nil, fmt.Errorf("Invalid long(%d) and short(%d) term values for series.", longTerm, shortTerm)
+    return nil, fmt.Errorf("sma_crossover: invalid long(%d) and short(%d) term values for series.", longTerm, shortTerm)
   }
 
   return &SimpleMovingAverageDetector{
@@ -30,7 +30,7 @@ func NewSimpleMovingAverageDetector(shortTerm int, longTerm int) (*SimpleMovingA
 func (detector *SimpleMovingAverageDetector) Process(quotes []*pb.Quote) (bool, error) {
   if len(quotes) < detector.longTerm+1 {
     return false, fmt.Errorf(
-      "Unable to compute N-series SMA with N=%d for series length %d",
+      "sma_crossover: unable to compute N-series SMA with N=%d for series length %d",
       detector.longTerm,
       len(quotes),
     )
@@ -41,8 +41,14 @@ func (detector *SimpleMovingAverageDetector) Process(quotes []*pb.Quote) (bool, 
   for i:=0; i<len(prices); i++ {
     prices[i] = quotes[i].Close
   }
-  shortMA := sma.SimpleMovingAverageSeries(detector.shortTerm, prices)
-  longMA := sma.SimpleMovingAverageSeries(detector.longTerm, prices)
+  shortMA, err := sma.SimpleMovingAverageSeries(detector.shortTerm, prices)
+  if err != nil {
+    return false, err
+  }
+  longMA, err := sma.SimpleMovingAverageSeries(detector.longTerm, prices)
+  if err != nil {
+    return false, err
+  }
 
   crossovers := crossover.DetectCrossovers(shortMA, longMA)
   recentCrossover := crossovers[len(crossovers)-1]

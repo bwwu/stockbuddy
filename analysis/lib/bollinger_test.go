@@ -1,12 +1,16 @@
 package bollinger_test
 
 import (
+  "log"
 	"testing"
 	"stockbuddy/analysis/lib/bollinger"
 )
 
 func TestStandardDeviation(t *testing.T) {
-	got := bollinger.StandardDeviation(testVals)
+	got, err := bollinger.StandardDeviation(testVals)
+  if err != nil {
+    log.Fatal(err)
+  }
   want := 11.739817553869887
   if want != got {
     t.Errorf("bollinger.StandardDeviation(%v) = %v, want %v", testVals, got, want)
@@ -14,7 +18,10 @@ func TestStandardDeviation(t *testing.T) {
 }
 
 func TestBollingerBands(t *testing.T) {
-	bands := bollinger.BollingerBandSeries(20, 2, testPrices)
+	bands, err := bollinger.BollingerBandSeries(20, 2, testPrices)
+  if err != nil {
+    log.Fatal(err)
+  }
 	gotLen := len(bands.Upper)
 
   gotUBand := bands.Upper[gotLen-1]
