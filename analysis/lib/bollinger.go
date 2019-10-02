@@ -17,7 +17,7 @@ func StandardDeviation(values []float64) float64 {
 	for _,val := range values {
 		sum += math.Pow(val - mean, 2)
 	}
-	return math.Sqrt(sum/float64(n-0))
+	return math.Sqrt(sum/float64(n))
 }
 
 func StandardDeviationSeries(n int, values []float64) []float64 {
@@ -28,12 +28,13 @@ func StandardDeviationSeries(n int, values []float64) []float64 {
 	return stdevs
 }
 
-// BollingerBandSeries requires N+1 data points
+// BollingerBandSeries returns daily Bollinger band values given a price series.
+// Requires >= N+1 data points in the series.
 func BollingerBandSeries(n, k int, prices []float64) BollingerBands {
 	// N-series Moving averages
 	nmas := sma.SimpleMovingAverageSeries(n, prices)
 	stdevs := StandardDeviationSeries(n, prices)
-	// UpperBand = MA(N) + K*σ(N)
+	// UpperBand = MA(N) + K*σ(N).
 	lband := make([]float64, len(stdevs))
 	uband := make([]float64, len(stdevs))
 
