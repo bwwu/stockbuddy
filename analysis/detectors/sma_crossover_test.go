@@ -1,8 +1,8 @@
 package detectors_test
 
 import (
+  "log"
   "testing"
-
   "stockbuddy/analysis/constants"
   pb "stockbuddy/protos/quote_go_proto"
   sma "stockbuddy/analysis/detectors/sma_crossover"
@@ -11,14 +11,22 @@ import (
 func TestBearishSMACrossover(t *testing.T) {
   detector,_ := sma.NewSimpleMovingAverageDetector(12, 48)
   quotes := generateQuotes(testBearish)
-  hasCrossover,_ := detector.Process(quotes)
-
+  hasCrossover, err := detector.Process(quotes)
+  if err != nil {
+    log.Fatal(err)
+  }
   if !hasCrossover {
-    t.Error("Expected a crossover")
+    t.Error("d.Process(...) = %v, want %v", hasCrossover, true)
   }
   crossover := detector.Get()
   if crossover.Outlook() != constants.Bearish {
-    t.Errorf("Expected Bearish outlook, but got %s", crossover.Outlook().String())
+    t.Errorf("d.Get().Outlook() = %v, want %v", crossover.Outlook().String(), constants.Bearish.String())
+  }
+
+  got := crossover.Summary()
+  want := "MA(12)=6.86(-0.19), MA(48)=6.99(-0.04)"
+  if got != want {
+    t.Errorf("d.Get().Summary() = %v, want %v", got, want)
   }
 }
 

@@ -84,7 +84,7 @@ func (c SimpleMovingAverageCrossover) Name() string {
 }
 
 func (c SimpleMovingAverageCrossover) Summary() string {
-  summary := "MA-%d=%s, MA-%d=%s"
+  summary := "MA(%d)=%s, MA(%d)=%s"
   return fmt.Sprintf(summary, c.shortTerm,
     getDeltaStr(c.shortMA, c.shortMADelta),
     c.longTerm,
@@ -103,7 +103,7 @@ func (c SimpleMovingAverageCrossover) Trend() constants.Trend {
 func getDeltaStr(ref, cmp float64) string {
   delta := ref - cmp
   if delta >= 0 {
-    return fmt.Sprintf("%.2f (+.%2f)", ref, delta)
+    return fmt.Sprintf("%.2f(+%.2f)", ref, delta)
   }
-  return fmt.Sprintf("%.2f (.%2f)", ref, delta)
+  return fmt.Sprintf("%.2f(%.2f)", ref, delta)
 }
