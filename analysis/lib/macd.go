@@ -1,12 +1,14 @@
+// Package macd implements Moving-Average Convergence Divergence alg on a price
+// series ordered in descending order of age.
 package macd
 
 import (
   "stockbuddy/analysis/lib/sma"
 )
 
-// MovingAverageConvergenceDivergenceSeries calculates the difference between
+// MovingAverageConvergenceDivergenceSeries returns the difference between
 // 12-Period and 26-Period EMA. Generally compared against a Signal line 
-// generated from a 9-Day EMA of the MACD
+// generated from a 9-Day EMA of the MACD.
 func MovingAverageConvergenceDivergenceSeries(prices []float64) []float64 {
   twelvePeriodEMA := sma.ExponentialMovingAverageSeries(12, prices)
   twentySixPeriodEMA := sma.ExponentialMovingAverageSeries(26, prices)

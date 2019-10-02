@@ -32,16 +32,17 @@ func SimpleMovingAverageSeries(n int, prices []float64) []float64 {
 }
 
 /**
- * ExponentialMovingAverage calculates the weighted average of a price series
+ * ExponentialMovingAverage calculates the weighted average of a price series.
  * Using the formula: EMA(t) = A*Price(t) + (A-1)*EMA(t-1)
- * Where A = 2/(N+1). EMA(0) = Price(0)
+ * Where A = 2/(N+1). EMA(0) = Price(0).
  */
 func ExponentialMovingAverage(n int, prices []float64) float64 {
   series := ExponentialMovingAverageSeries(n, prices)
   return series[len(series)-1]
 }
 
-// ExponentialMovingAverageSeries
+// ExponentialMovingAverageSeries returns a daily series of EMA given a price
+// series.
 func ExponentialMovingAverageSeries(n int, prices []float64) []float64 {
   // k = 3.45*(N+1) is recommmended min num of data points for accurate EMA
   // en.wikipedia.org/wiki/Moving_average#Approximating_the_EMA_with_a_limited_number_of_terms

@@ -7,11 +7,23 @@ import (
 
 // Simple Moving Average (SMA) tests
 func TestSimpleMovingAverage50(t *testing.T) {
-  testFloatEquals(t, 1187.2912033799998, sma.SimpleMovingAverage(50,testSeries))
+  period := 50
+  want := 1187.2912033799998
+  got := sma.SimpleMovingAverage(period, testSeries)
+
+  if want != got {
+    t.Errorf("sma.SimpleMovingAverage(%v,%v) = %v, want %v", period, testSeries, got, want)
+  }
 }
 
 func TestSimpleMovingAverage200(t *testing.T) {
-  testFloatEquals(t, 1140.4932497750003, sma.SimpleMovingAverage(200,testSeries))
+  period := 200
+  want := 1140.4932497750003
+  got := sma.SimpleMovingAverage(period, testSeries)
+
+  if want != got {
+    t.Errorf("sma.SimpleMovingAverage(%v,%v) = %v, want %v", period, testSeries, got, want)
+  }
 }
 
 func TestSimpleMovingAverageSeries50(t *testing.T) {
@@ -24,11 +36,23 @@ func TestSimpleMovingAverageSeries50(t *testing.T) {
 
 // Exponential Moving Average (EMA) tests
 func TestExponentialMovingAverage10(t *testing.T) {
-  testFloatEquals(t, 1224.7593918576256, sma.ExponentialMovingAverage(10,testSeries))
+  period := 10
+  want := 1224.7593918576256
+  got := sma.ExponentialMovingAverage(period, testSeries)
+
+  if want != got {
+    t.Errorf("sma.ExponentialMovingAverage(%v,%v) = %v, want %v", period, testSeries, got, want)
+  }
 }
 
 func TestExponentialMovingAverage30(t *testing.T) {
-  testFloatEquals(t, 1202.3654628306713, sma.ExponentialMovingAverage(30,testSeries))
+  period := 30
+  want := 1202.3654628306713
+  got := sma.ExponentialMovingAverage(period, testSeries)
+
+  if want != got {
+    t.Errorf("sma.ExponentialMovingAverage(%v,%v) = %v, want %v", period, testSeries, got, want)
+  }
 }
 
 // Helper functions
