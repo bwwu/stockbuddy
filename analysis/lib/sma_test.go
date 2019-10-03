@@ -40,7 +40,6 @@ func TestSimpleMovingAverageSeries50(t *testing.T) {
     log.Fatal(err)
   }
 
-  testSliceLen(t, 3, smaSeries)
   if len(smaSeries) != 3 {
     t.Errorf("len(sma.SimpleMovingAverageSeries(%v,%v)) = %v, want %v", period, testSeries, len(smaSeries), 3)
   }
@@ -64,7 +63,10 @@ func TestSimpleMovingAverageSeries50(t *testing.T) {
 func TestExponentialMovingAverage10(t *testing.T) {
   period := 10
   want := 1224.7593918576256
-  got := sma.ExponentialMovingAverage(period, testSeries)
+  got, err := sma.ExponentialMovingAverage(period, testSeries)
+  if err != nil {
+    log.Fatal(err)
+  }
 
   if want != got {
     t.Errorf("sma.ExponentialMovingAverage(%v,%v) = %v, want %v", period, testSeries, got, want)
@@ -74,24 +76,13 @@ func TestExponentialMovingAverage10(t *testing.T) {
 func TestExponentialMovingAverage30(t *testing.T) {
   period := 30
   want := 1202.3654628306713
-  got := sma.ExponentialMovingAverage(period, testSeries)
+  got, err := sma.ExponentialMovingAverage(period, testSeries)
+  if err != nil {
+    log.Fatal(err)
+  }
 
   if want != got {
     t.Errorf("sma.ExponentialMovingAverage(%v,%v) = %v, want %v", period, testSeries, got, want)
-  }
-}
-
-// Helper functions
-func testFloatEquals(t *testing.T,  expected float64, actual float64) {
-  if actual != expected {
-    t.Errorf("Expected %v, but got %v", expected, actual)
-  }
-}
-
-func testSliceLen(t *testing.T, expected int, got []float64) {
-  actual := len(got)
-  if actual != expected {
-    t.Errorf("Expected slice len %d, but got %d", expected, actual)
   }
 }
 

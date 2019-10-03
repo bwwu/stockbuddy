@@ -1,9 +1,6 @@
 package sma
 
-import (
-  "fmt"
-  "log"
-)
+import "fmt"
 
 /**
  * SimpleMovingAverage calculates the N-period arthmetic mean of a price
@@ -41,18 +38,21 @@ func SimpleMovingAverageSeries(n int, prices []float64) ([]float64, error) {
  * Using the formula: EMA(t) = A*Price(t) + (A-1)*EMA(t-1)
  * Where A = 2/(N+1). EMA(0) = Price(0).
  */
-func ExponentialMovingAverage(n int, prices []float64) float64 {
-  series := ExponentialMovingAverageSeries(n, prices)
-  return series[len(series)-1]
+func ExponentialMovingAverage(n int, prices []float64) (float64, error) {
+  series, err := ExponentialMovingAverageSeries(n, prices)
+  if err != nil {
+    return 0., err
+  }
+  return series[len(series)-1], nil
 }
 
 // ExponentialMovingAverageSeries returns a daily series of EMA given a price
 // series.
-func ExponentialMovingAverageSeries(n int, prices []float64) []float64 {
+func ExponentialMovingAverageSeries(n int, prices []float64) ([]float64, error) {
   // k = 3.45*(N+1) is recommmended min num of data points for accurate EMA
   // en.wikipedia.org/wiki/Moving_average#Approximating_the_EMA_with_a_limited_number_of_terms
   if float64(len(prices)) < 3.45*float64(n+1) {
-    log.Println("WARNING: for an accurate EMA, the price series should have at least 3.45(N+1) data points")
+    return nil, fmt.Errorf("sma: for an accurate EMA, the series should have at least 3.45(N+1) data points, but has %d", len(prices))
   }
   series := make([]float64, len(prices))
 
@@ -62,5 +62,5 @@ func ExponentialMovingAverageSeries(n int, prices []float64) []float64 {
   for i:=1; i<len(series); i++ {
     series[i] = alpha*prices[i] + (1.-alpha)*series[i-1]
   }
-  return series
+  return series, nil
 }

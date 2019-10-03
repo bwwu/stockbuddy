@@ -14,8 +14,8 @@ func DetectMovingAverageConvergenceDivergenceCrossover(quotes []*quotepb.Quote) 
     prices[i] = quote.Close
   }
 
-  macdSeries := macd.MovingAverageConvergenceDivergenceSeries(prices)
-  signalLineSeries := sma.ExponentialMovingAverageSeries(9, macdSeries)
+  macdSeries, _ := macd.MovingAverageConvergenceDivergenceSeries(12, 26, prices)
+  signalLineSeries,_ := sma.ExponentialMovingAverageSeries(9, macdSeries)
 
   return cr.NewCrossoverReporter("MACD(12,26,9)", quotes[0].Symbol, "MACD(12,26)", "Signal Line", macdSeries, signalLineSeries), nil
 }

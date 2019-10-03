@@ -1,23 +1,32 @@
 package macd_test
 
 import (
+  "log"
   "testing"
   "stockbuddy/analysis/lib/macd"
   "stockbuddy/analysis/lib/sma"
 )
 
-
 func TestMACD(t *testing.T) {
-  macd := macd.MovingAverageConvergenceDivergenceSeries(testSeries)
-  signalLine := sma.ExponentialMovingAverage(9, macd)
-  testFloatEquals(t, 15.897515583845006, macd[len(macd)-1])
-  testFloatEquals(t, 2.174748103809085, macd[len(macd)-1] - signalLine)
-}
+  macd, err := macd.MovingAverageConvergenceDivergenceSeries(12, 26, testSeries)
+  if err != nil {
+    log.Fatal(err)
+  }
+  want := 15.897515583845006
+  got := macd[len(macd)-1]
+  if want != got {
+    t.Errorf("macd.MovingAverageConvergenceDivergenceSeries(...) = %v, want %v", got, want)
+  }
 
-// Helper functions
-func testFloatEquals(t *testing.T,  expected float64, actual float64) {
-  if actual != expected {
-    t.Errorf("Expected %v, but got %v", expected, actual)
+  signalLine, err := sma.ExponentialMovingAverage(9, macd)
+  if err != nil {
+    log.Fatal(err)
+  }
+
+  want = 2.174748103809085
+  got = macd[len(macd)-1] - signalLine
+  if want != got {
+    t.Errorf("macd - signalLine = %v, want %v", got, want)
   }
 }
 
