@@ -51,8 +51,9 @@ func ExponentialMovingAverage(n int, prices []float64) (float64, error) {
 func ExponentialMovingAverageSeries(n int, prices []float64) ([]float64, error) {
   // k = 3.45*(N+1) is recommmended min num of data points for accurate EMA
   // en.wikipedia.org/wiki/Moving_average#Approximating_the_EMA_with_a_limited_number_of_terms
-  if float64(len(prices)) < 3.45*float64(n+1) {
-    return nil, fmt.Errorf("sma: for an accurate EMA, the series should have at least 3.45(N+1) data points, but has %d", len(prices))
+  minSeriesLen := 3.45*float64(n+1)
+  if float64(len(prices)) <  minSeriesLen {
+    return nil, fmt.Errorf("sma: for an accurate EMA, the series should have at least 3.45(N+1) = %v data points, but has %d", minSeriesLen, len(prices)) 
   }
   series := make([]float64, len(prices))
 

@@ -16,7 +16,7 @@ type SimpleMovingAverageDetector struct {
   crossover *SimpleMovingAverageCrossover
 }
 
-func NewSimpleMovingAverageDetector(shortTerm int, longTerm int) (*SimpleMovingAverageDetector, error) {
+func NewSimpleMovingAverageDetector(shortTerm, longTerm int) (*SimpleMovingAverageDetector, error) {
   if shortTerm >= longTerm || shortTerm <= 0 {
     return nil, fmt.Errorf("sma_crossover: invalid long(%d) and short(%d) term values for series.", longTerm, shortTerm)
   }
