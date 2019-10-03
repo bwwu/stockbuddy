@@ -2,7 +2,6 @@ package detectors
 
 import (
   "fmt"
-
   "stockbuddy/analysis/insight"
   "stockbuddy/analysis/constants"
   "stockbuddy/analysis/lib/sma"
@@ -13,7 +12,6 @@ import (
 // SimpleMovingAverageDetector implements IndicatorFactory interface
 type SimpleMovingAverageDetector struct {
   shortTerm, longTerm int
-  crossover *SimpleMovingAverageCrossover
 }
 
 func NewSimpleMovingAverageDetector(shortTerm, longTerm int) (*SimpleMovingAverageDetector, error) {
@@ -27,9 +25,9 @@ func NewSimpleMovingAverageDetector(shortTerm, longTerm int) (*SimpleMovingAvera
   }, nil
 }
 
-func (detector *SimpleMovingAverageDetector) Process(quotes []*pb.Quote) (bool, error) {
+func (detector *SimpleMovingAverageDetector) Process(quotes []*pb.Quote) (insight.Indicator, error) {
   if len(quotes) < detector.longTerm+1 {
-    return false, fmt.Errorf(
+    return nil, fmt.Errorf(
       "sma_crossover: unable to compute N-series SMA with N=%d for series length %d",
       detector.longTerm,
       len(quotes),
@@ -43,20 +41,20 @@ func (detector *SimpleMovingAverageDetector) Process(quotes []*pb.Quote) (bool, 
   }
   shortMA, err := sma.SimpleMovingAverageSeries(detector.shortTerm, prices)
   if err != nil {
-    return false, err
+    return nil, err
   }
   longMA, err := sma.SimpleMovingAverageSeries(detector.longTerm, prices)
   if err != nil {
-    return false, err
+    return nil, err
   }
 
   crossovers := crossover.DetectCrossovers(shortMA, longMA)
   recentCrossover := crossovers[len(crossovers)-1]
   if recentCrossover == 0 {
-    return false, nil
+    return nil, nil
   }
 
-  detector.crossover = &SimpleMovingAverageCrossover{
+  return &SimpleMovingAverageCrossover{
     outlook: recentCrossover,
     shortTerm: detector.shortTerm,
     longTerm: detector.longTerm,
@@ -64,12 +62,7 @@ func (detector *SimpleMovingAverageDetector) Process(quotes []*pb.Quote) (bool, 
     shortMADelta: shortMA[len(shortMA)-2],
     longMA: longMA[len(longMA)-1],
     longMADelta: longMA[len(longMA)-2],
-  }
-  return true, nil
-}
-
-func (detector *SimpleMovingAverageDetector) Get() insight.Indicator {
-  return detector.crossover
+  }, nil
 }
 
 // SimpleMovingAverageCrossover implements Indicator interface

@@ -11,14 +11,13 @@ import (
 func TestBearishSMACrossover(t *testing.T) {
   detector,_ := sma.NewSimpleMovingAverageDetector(12, 48)
   quotes := generateQuotes(testBearish)
-  hasCrossover, err := detector.Process(quotes)
+  crossover, err := detector.Process(quotes)
   if err != nil {
     log.Fatal(err)
   }
-  if !hasCrossover {
-    t.Error("d.Process(...) = %v, want %v", hasCrossover, true)
+  if crossover == nil {
+    t.Error("d.Process(...) = nil")
   }
-  crossover := detector.Get()
   if crossover.Outlook() != constants.Bearish {
     t.Errorf("d.Get().Outlook() = %v, want %v", crossover.Outlook().String(), constants.Bearish.String())
   }

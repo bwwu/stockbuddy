@@ -13,14 +13,13 @@ func TestBearishCrossover(t *testing.T) {
   if err != nil {
     log.Fatal(err)
   }
-  has, err := d.Process(pricesToQuotes(testSeries))
+  crossover, err := d.Process(pricesToQuotes(testSeries))
   if err != nil {
     log.Fatal(err)
   }
-  if !has {
-    t.Errorf("MACDDetector.Process(...) = %v, want %v", has, true)
+  if crossover == nil {
+    t.Errorf("MACDDetector.Process(...) = nil")
   }
-  crossover := d.Get()
   got := crossover.Outlook()
   want := constants.Bearish
 

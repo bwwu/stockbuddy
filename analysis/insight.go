@@ -23,8 +23,7 @@ type Indicator interface {
 // Detector is a generic type. It computes the val of an indicator and provides
 // an interpretation, if any (e.g. Bearish reversal)
 type Detector interface {
-  Process([]*pb.Quote) (bool, error)
-  Get() Indicator
+  Process([]*pb.Quote) (Indicator, error)
 }
 
 // Analyzer represents a series of computation which the caller can inoke
@@ -43,7 +42,7 @@ func (a *Analyzer) Analyze(ctx context.Context, symbol string) []Indicator {
   resp, err := a.client.ListQuoteHistory(ctx, req)
   if err != nil {
     log.Println(err.Error())
-    return []Indicator{}
+    return nil
   }
 
   indicatorc := make(chan Indicator)
@@ -53,13 +52,13 @@ func (a *Analyzer) Analyze(ctx context.Context, symbol string) []Indicator {
 
   // Spawn goroutine per detector
   for _, d := range a.detectors {
-    go func() {
-      if _, err := d.Process(resp.Quotes); err != nil {
+    go func(detector Detector) {
+      if ind, err := detector.Process(resp.Quotes); err != nil {
         errc <- err
       } else {
-        indicatorc <- d.Get()
+        indicatorc <- ind
       }
-    }()
+    }(d)
   }
 
   // Collect errors and results from indicators
@@ -67,7 +66,10 @@ func (a *Analyzer) Analyze(ctx context.Context, symbol string) []Indicator {
   for i:=0; i<len(a.detectors); i++ {
     select {
     case indic := <-indicatorc:
-      indicators = append(indicators, indic)
+      if indic != nil {
+        //log.Printf("Found for %s: %s, %s", symbol, indic.Name(), indic.Outlook().String())
+        indicators = append(indicators, indic)
+      }
     case err := <-errc:
       log.Println(err.Error())
     }

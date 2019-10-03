@@ -45,7 +45,9 @@ go_binary(
   srcs = ["main_insight.go"],
   deps = [
     ":insight",
+    ":stocks_to_watch",
     "//analysis/detectors:sma_crossover",
+    "//analysis/detectors:macd_crossover2",
     "//protos:quote_go_proto",
     "@org_golang_google_grpc//:go_default_library",
   ],

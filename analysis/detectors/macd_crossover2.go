@@ -13,7 +13,6 @@ import (
 // MACDDetector
 type MACDDetector struct {
   shortTerm, longTerm, signalTerm int
-  crossover *MACDCrossover
 }
 
 func NewMACDDetector(shortTerm, longTerm, signalTerm int) (*MACDDetector, error) {
@@ -31,7 +30,7 @@ func NewMACDDetector(shortTerm, longTerm, signalTerm int) (*MACDDetector, error)
   }, nil
 }
 
-func (d *MACDDetector) Process(quotes []*pb.Quote) (bool, error) {
+func (d *MACDDetector) Process(quotes []*pb.Quote) (insight.Indicator, error) {
   // Collect closing prices.
   prices := make([]float64, 0, len(quotes))
   for _, quote := range quotes {
@@ -40,31 +39,26 @@ func (d *MACDDetector) Process(quotes []*pb.Quote) (bool, error) {
 
   macdSeries, err := macd.MovingAverageConvergenceDivergenceSeries(d.shortTerm, d.longTerm, prices)
   if err != nil {
-    return false, err
+    return nil, err
   }
   signalLine, err := sma.ExponentialMovingAverageSeries(d.signalTerm, macdSeries)
   if err != nil {
-    return false, err
+    return nil, err
   }
 
   crossovers := crossover.DetectCrossovers(macdSeries, signalLine)
   recentCrossover := crossovers[len(crossovers)-1]
   if recentCrossover == 0 {
-    return false, nil
+    return nil, nil
   }
-  d.crossover = &MACDCrossover {
+  return &MACDCrossover {
     shortTerm: d.shortTerm,
     longTerm: d.longTerm,
     signalTerm: d.signalTerm,
     macd: macdSeries[len(macdSeries)-1],
     signalLine: signalLine[len(signalLine)-1],
     outlook: recentCrossover,
-  }
-  return true, nil
-}
-
-func (d *MACDDetector) Get() insight.Indicator {
-  return d.crossover
+  }, nil
 }
 
 // MACDCrossover
