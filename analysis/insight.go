@@ -26,6 +26,11 @@ type Detector interface {
   Process([]*pb.Quote) (Indicator, error)
 }
 
+type AnalyzerSummary struct {
+  Symbol string
+  Indicators []Indicator
+}
+
 // Analyzer represents a series of computation which the caller can inoke
 // across multiple symbols.
 type Analyzer struct {
@@ -67,7 +72,6 @@ func (a *Analyzer) Analyze(ctx context.Context, symbol string) []Indicator {
     select {
     case indic := <-indicatorc:
       if indic != nil {
-        //log.Printf("Found for %s: %s, %s", symbol, indic.Name(), indic.Outlook().String())
         indicators = append(indicators, indic)
       }
     case err := <-errc:

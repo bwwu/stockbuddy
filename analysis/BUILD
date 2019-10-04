@@ -17,6 +17,7 @@ go_library(
   name = "insight",
   srcs = [
     "insight.go",
+    "insight_formatter.go",
   ],
   importpath = "stockbuddy/analysis/insight",
   visibility = ["//visibility:public"],
@@ -42,13 +43,17 @@ go_binary(
 
 go_binary(
   name = "main_insight",
-  srcs = ["main_insight.go"],
+  srcs = [
+    "main_insight.go",
+    "stocks_to_watch.go",
+  ],
   deps = [
     ":insight",
     ":stocks_to_watch",
     "//analysis/detectors:sma_crossover",
     "//analysis/detectors:macd_crossover2",
     "//protos:quote_go_proto",
+    "//smtp:sendmail",
     "@org_golang_google_grpc//:go_default_library",
   ],
 )
