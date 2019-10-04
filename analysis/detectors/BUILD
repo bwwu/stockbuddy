@@ -7,19 +7,6 @@ go_library(
   srcs = ["macd_crossover.go"],
   importpath = "stockbuddy/analysis/detectors/macd_crossover",
   deps = [
-    "//analysis/lib:macd",
-    "//analysis/lib:sma",
-    "//analysis/moving_average/crossover:crossover_reporter",
-    "//protos:quote_go_proto",
-  ],
-)
-
-
-go_library(
-  name = "macd_crossover2",
-  srcs = ["macd_crossover2.go"],
-  importpath = "stockbuddy/analysis/detectors/macd_crossover2",
-  deps = [
     "//analysis:constants",
     "//analysis:insight",
     "//analysis/lib:macd",

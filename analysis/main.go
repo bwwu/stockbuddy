@@ -6,11 +6,10 @@ import (
   "google.golang.org/grpc"
 
   "stockbuddy/smtp/sendmail"
-  stw "stockbuddy/analysis/stocks_to_watch"
-  ma "stockbuddy/analysis/moving_average/moving_average"
+  "stockbuddy/analysis/insight"
+  sma "stockbuddy/analysis/detectors/sma_crossover"
   macd "stockbuddy/analysis/detectors/macd_crossover"
-  cr "stockbuddy/analysis/moving_average/crossover/crossover_reporter"
-  quotepb "stockbuddy/protos/quote_go_proto"
+  pb "stockbuddy/protos/quote_go_proto"
 )
 
 func main() {
@@ -18,61 +17,65 @@ func main() {
   if err != nil {
     log.Fatal(err.Error())
   }
-  client := quotepb.NewQuoteServiceClient(conn)
-  searchSymbolsForMACrossover(client, stw.StocksToWatch)
+  client := pb.NewQuoteServiceClient(conn)
+  summaries := process(client, StocksToWatch)
+  if len(summaries) > 0 {
+    for _, summ := range summaries {
+      log.Printf("main: %d indicators found for %s.\n", len(summ.Indicators), summ.Symbol)
+    }
+    msgBody := insight.TableFormat(summaries)
+    mail(msgBody)
+  }
   conn.Close()
 }
 
-func searchSymbolsForMACrossover(c quotepb.QuoteServiceClient, symbols []string) {
-  crossovers := make([]*cr.CrossoverReporter, 0)
-  for _, symbol := range symbols {
-    summary := calculateMACrossover(c, symbol)
-    if summary != nil {
-      crossovers = append(crossovers, summary...)
-    }
-  }
-  if len(crossovers) > 0 {
-    subject := "New Crossovers Detected"
-    recipients := []string{"brandonwu23@gmail.com"}
-    log.Printf("%d crossovers found\n", len(crossovers))
+func mail(content string) {
+  subject := "Reversal Trends Detected"
+  recipients := []string{"brandonwu23@gmail.com"}
 
-    body := "<p>The following stocks have emitted either a 12-Day/48-Day Simple Moving Average - <strong>SMA(12,48)</strong> or a Moving Average Convergence Divergence - <strong>MACD(12,26,9)</strong> Crossover signal...</p>\n"
-    body = body + ma.GetSummaryTable(crossovers)
-    email := sendmail.Email{body, subject, recipients}
-    email.Send()
-  }
+  body := "<p>Reversal trends have been detected for the following stocks:</p>\n" + content
+
+  email := sendmail.Email{body, subject, recipients}
+  email.Send()
 }
 
-func calculateMACrossover(c quotepb.QuoteServiceClient, symbol string) []*cr.CrossoverReporter {
-  req := &quotepb.QuoteRequest{Symbol: symbol, Period: 365}
-  resp, err := c.ListQuoteHistory(context.Background(), req)
-  crossovers := make([]*cr.CrossoverReporter, 0)
-
-  if err != nil {
-    log.Println(err.Error())
-    return []*cr.CrossoverReporter{}
+func process(client pb.QuoteServiceClient, stocks []string) []*insight.AnalyzerSummary {
+  // Instantiate all of the detectors to run.
+  detectors := make([]insight.Detector, 0)
+  if smaDetec, err := sma.NewSimpleMovingAverageDetector(12, 48); err != nil {
+    log.Fatal(err)
+  } else {
+    detectors = append(detectors, smaDetec)
+  }
+  if macdDetec, err := macd.NewMACDDetector(12, 26, 9); err != nil {
+    log.Fatal(err)
+  } else {
+    detectors = append(detectors, macdDetec)
   }
 
-  smaCrossover, err := ma.NewMovingAverageCrossoverReporter(12, 48, resp.Quotes)
-  if err != nil {
-    log.Println(err.Error())
-    return []*cr.CrossoverReporter{}
-  }
-  if smaCrossover.GetCrossover() != 0 {
-    log.Printf("%s MA-Crossover found for \"%s\"", smaCrossover.GetCrossover().String(), symbol)
-    crossovers = append(crossovers, smaCrossover)
-  }
-  macdCrossover, err := macd.DetectMovingAverageConvergenceDivergenceCrossover(resp.Quotes)
-  if err != nil {
-    log.Println(err.Error())
-    return []*cr.CrossoverReporter{}
+  // Spawn goroutine to run analyzer over all detectors, one per stock.
+  summaryc := make(chan *insight.AnalyzerSummary)
+  defer close(summaryc)
+
+  for _, symbol := range stocks {
+    go func(s string) {
+      analyzer := insight.NewAnalyzer(client, detectors...)
+      indicators := analyzer.Analyze(context.Background(), s)
+      if indicators == nil {
+        summaryc <- nil
+      } else {
+        summaryc <- &insight.AnalyzerSummary{s, indicators}
+      }
+    }(symbol)
   }
 
-  // log.Printf("MACD for %s = %v\n", symbol, macdCrossover.SeriesA[len(macdCrossover.SeriesA)-1])
-  // log.Printf("Signal line for %s = %v\n", symbol, macdCrossover.SeriesB[len(macdCrossover.SeriesB)-1])
-  if macdCrossover.GetCrossover() != 0 {
-    log.Printf("%s MACD-Crossover found for \"%s\"", macdCrossover.GetCrossover().String(), symbol)
-    crossovers = append(crossovers, macdCrossover)
+  // Collect result from each analyzer, filter out nil.
+  result := make([]*insight.AnalyzerSummary, 0)
+  for i:=0; i<len(stocks); i++ {
+    summary := <-summaryc
+    if summary != nil {
+      result = append(result, summary)
+    }
   }
-  return crossovers
+  return result
 }

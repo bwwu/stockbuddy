@@ -28,30 +28,16 @@ go_library(
 )
 
 go_binary(
-  name = "main",
-  srcs = ["main.go"],
-  deps = [
-    ":stocks_to_watch",
-    "//analysis/moving_average:moving_average",
-    "//analysis/moving_average/crossover:crossover_reporter",
-    "//analysis/detectors:macd_crossover",
-    "//protos:quote_go_proto",
-    "//smtp:sendmail",
-    "@org_golang_google_grpc//:go_default_library",
-  ],
-)
-
-go_binary(
-  name = "main_insight",
+  name = "analysis",
   srcs = [
-    "main_insight.go",
+    "main.go",
     "stocks_to_watch.go",
   ],
   deps = [
     ":insight",
     ":stocks_to_watch",
     "//analysis/detectors:sma_crossover",
-    "//analysis/detectors:macd_crossover2",
+    "//analysis/detectors:macd_crossover",
     "//protos:quote_go_proto",
     "//smtp:sendmail",
     "@org_golang_google_grpc//:go_default_library",

@@ -4,7 +4,7 @@ import (
   "log"
   "testing"
   "stockbuddy/analysis/constants"
-  macd "stockbuddy/analysis/detectors/macd_crossover2"
+  macd "stockbuddy/analysis/detectors/macd_crossover"
   pb "stockbuddy/protos/quote_go_proto"
 )
 

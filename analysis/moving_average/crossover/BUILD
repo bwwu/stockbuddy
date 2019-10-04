@@ -9,16 +9,6 @@ go_library(
   deps = ["//analysis:constants"],
 )
 
-go_library(
-  name = "crossover_reporter",
-  srcs = ["crossover_reporter.go"],
-  importpath = "stockbuddy/analysis/moving_average/crossover/crossover_reporter",
-  deps = [
-    ":crossover",
-    "//analysis:constants",
-  ],
-)
-
 go_test(
   name = "crossover_test",
   srcs = ["crossover_test.go"],
