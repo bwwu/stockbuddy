@@ -3,7 +3,7 @@ package crossover_test
 import (
   "testing"
   "stockbuddy/analysis/constants"
-  "stockbuddy/analysis/moving_average/crossover/crossover"
+  "stockbuddy/analysis/lib/crossover"
 )
 
 func TestCrossoverSeries(t *testing.T) {

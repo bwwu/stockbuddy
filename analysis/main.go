@@ -4,7 +4,6 @@ import (
   "context"
   "log"
   "google.golang.org/grpc"
-
   "stockbuddy/smtp/sendmail"
   "stockbuddy/analysis/insight"
   sma "stockbuddy/analysis/detectors/sma_crossover"

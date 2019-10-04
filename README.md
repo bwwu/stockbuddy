@@ -17,7 +17,7 @@ This starts an RPC server on localhost:50051.
 ### 2. Run the analyzer.
 
 ```sh
-bazel run //analysis:main
+bazel run //analysis
 ```
 
 This binary connects to the RPC service started in step 1, runs the analyzers

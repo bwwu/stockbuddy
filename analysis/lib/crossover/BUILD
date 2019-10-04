@@ -5,7 +5,7 @@ package(default_visibility = ["//visibility:public"])
 go_library(
   name = "crossover",
   srcs = ["crossover.go"],
-  importpath = "stockbuddy/analysis/moving_average/crossover/crossover",
+  importpath = "stockbuddy/analysis/lib/crossover",
   deps = ["//analysis:constants"],
 )
 

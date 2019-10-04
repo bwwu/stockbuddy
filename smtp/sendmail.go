@@ -32,7 +32,7 @@ type sender struct {
 
 func getEmailContent(e *Email) []byte {
 	content := fmt.Sprintf(
-    "From:%s\nTo:%s\nSubject:%s\nContent-Type:text/html;charset=\"utf-8\"\n<html>%s</html>",
+    "From:%s\nTo:%s\nSubject:%s\nContent-Type:text/html;charset=\"utf-8\"\n<html>\n%s\n</html>",
     defaultSender.name,
     strings.Join(e.Recipients, ","),
     e.Subject,

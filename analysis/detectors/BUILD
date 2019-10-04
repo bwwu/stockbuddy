@@ -11,8 +11,8 @@ go_library(
     "//analysis:insight",
     "//analysis/lib:macd",
     "//analysis/lib:sma",
-    "//analysis/moving_average/crossover",
     "//protos:quote_go_proto",
+    "//analysis/lib/crossover",
   ],
 )
 
@@ -20,7 +20,7 @@ go_test(
   name = "macd_crossover_test",
   srcs = ["macd_crossover_test.go"],
   deps = [
-    ":macd_crossover2",
+    ":macd_crossover",
     "//analysis:constants",
     "//protos:quote_go_proto",
   ],
@@ -34,8 +34,8 @@ go_library(
     "//analysis:constants",
     "//analysis:insight",
     "//analysis/lib:sma",
-    "//analysis/moving_average/crossover",
     "//protos:quote_go_proto",
+    "//analysis/lib/crossover",
   ],
 )
 

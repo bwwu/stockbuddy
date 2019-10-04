@@ -5,7 +5,7 @@ import (
   "stockbuddy/analysis/insight"
   "stockbuddy/analysis/constants"
   "stockbuddy/analysis/lib/sma"
-  "stockbuddy/analysis/moving_average/crossover/crossover"
+  "stockbuddy/analysis/lib/crossover"
   pb "stockbuddy/protos/quote_go_proto"
 )
 
