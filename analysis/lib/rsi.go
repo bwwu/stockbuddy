@@ -30,8 +30,15 @@ func RelativeStrengthIndexSeries(n int, prices []float64) ([]float64, error) {
   }
 
   // Seed RS w arithmetic mean of first-N ups & downs (first N+1 days).
-  avgUp := sma.SimpleMovingAverage(n, ups[:n])
-  avgDown := sma.SimpleMovingAverage(n, downs[:n])
+  avgUp, err := sma.SimpleMovingAverage(n, ups[:n])
+  if err != nil {
+    return nil, err
+  }
+  avgDown, err := sma.SimpleMovingAverage(n, downs[:n])
+  if err != nil {
+    return nil, err
+  }
+
   rsi := make([]float64, len(prices)-n-1)
 
   // Start at day N+2.
