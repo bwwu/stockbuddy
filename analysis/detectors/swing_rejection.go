@@ -11,29 +11,69 @@ package detectors
 import (
   "fmt"
   "stockbuddy/analysis/constants"
+  "stockbuddy/analysis/insight"
   "stockbuddy/analysis/lib/rsi"
+  pb "stockbuddy/protos/quote_go_proto"
 )
 
+type SwingRejection struct {
+  lookback, period int
+  rsi float64
+  outlook constants.Outlook
+}
 
-/**
- * DetectSwingRejection determines whether there was a swing rejection event
- * in the price series, looking back the num of days specified as "lookback".
- */
-func DetectSwingRejection(prices []float64, lookback int) (constants.Outlook, error) {
+func (sr SwingRejection) Name() string {
+  return fmt.Sprintf("RSI(%d) %d-Day Swing Rejection", sr.period, sr.lookback)
+}
 
-  rsiSeries, err := rsi.RelativeStrengthIndexSeries(14, prices)
+func (sr SwingRejection) Summary() string {
+  return fmt.Sprintf("RSI(%d) = %.2f", sr.period, sr.rsi)
+}
+
+func (sr SwingRejection) Outlook() constants.Outlook {
+  return sr.outlook
+}
+
+func (sr SwingRejection) Trend() constants.Trend {
+  return constants.Reversal
+}
+
+type SwingRejectionDetector struct {
+  // lookback defines how far back in a price series to look for swings.
+  // period defines the N-period smoothing param for calculating RSI.
+  lookback, period int
+}
+
+func NewSwingRejectionDetector(lookback, period int) (*SwingRejectionDetector) {
+  return &SwingRejectionDetector{
+    lookback,
+    period,
+  }
+}
+
+func (d *SwingRejectionDetector) Process(quotes []*pb.Quote) (insight.Indicator, error) {
+  prices := make([]float64, 0, len(quotes))
+  for _, quote := range quotes {
+    prices = append(prices, quote.Close)
+  }
+
+  rsiSeries, err := rsi.RelativeStrengthIndexSeries(d.period, prices)
   if err != nil {
-    return 0, err
+    return nil, err
   }
-  if len(rsiSeries) < lookback {
-    return 0, fmt.Errorf("swing_rejection: price series len %d insufficient for lookback period of %d days", len(prices), lookback)
+  if len(rsiSeries) < d.lookback {
+    return nil, fmt.Errorf(
+      "swing_rejection: price series len %d insufficient for lookback period of %d days",
+      len(prices),
+      d.lookback,
+    )
   }
 
-  lookbackSeries := rsiSeries[len(rsiSeries)-lookback:]
+  lookbackSeries := rsiSeries[len(rsiSeries)-d.lookback:]
 
   start, extension := findMostRecentPriceExtension(lookbackSeries)
   if start == -1 {
-    return 0, nil
+    return nil, nil
   }
 
   // Indicates occurence of dip (Step 3).
@@ -62,20 +102,29 @@ func DetectSwingRejection(prices []float64, lookback int) (constants.Outlook, er
   if dipConfirmed {
     if extension == constants.Oversold && lookbackSeries[len(lookbackSeries)-1] > extremeRsi {
       // Step 4: RSI surpasses previous high. 
-      return constants.Bullish, nil
+      return &SwingRejection{
+        d.lookback,
+        d.period,
+        lookbackSeries[len(lookbackSeries)-1],
+        constants.Bullish,
+      }, nil
     }
     if extension == constants.Overbought && lookbackSeries[len(lookbackSeries)-1] < extremeRsi {
       // Step 4: RSI drops below previous low. 
-      return constants.Bearish, nil
+      return &SwingRejection{
+        d.lookback,
+        d.period,
+        lookbackSeries[len(lookbackSeries)-1],
+        constants.Bearish,
+       }, nil
     }
   }
-  return 0, nil
+  return nil, nil
 }
 
 // Returns index and type of price extension (over{bought,sold}) of most recent in RSI series.
 func findMostRecentPriceExtension(series []float64) (int, constants.PriceExtension) {
   var ext constants.PriceExtension
-
   for i:=len(series)-1; i>=0; i-- {
     if series[i] < 30. {
       return i, constants.Oversold
@@ -84,6 +133,5 @@ func findMostRecentPriceExtension(series []float64) (int, constants.PriceExtensi
       return i, constants.Overbought
     }
   }
-
   return -1, ext
 }

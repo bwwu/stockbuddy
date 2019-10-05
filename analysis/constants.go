@@ -31,7 +31,7 @@ const (
 )
 
 func (pe PriceExtension) String() string {
-  switch r {
+  switch pe { 
     case Overbought:
       return "Overbought"
     case Oversold:

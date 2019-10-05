@@ -55,6 +55,8 @@ go_library(
   importpath = "stockbuddy/analysis/detectors/swing_rejection",
   deps = [
     "//analysis:constants",
+    "//analysis:insight",
     "//analysis/lib:rsi",
+    "//protos:quote_go_proto",
   ],
 )
