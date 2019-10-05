@@ -15,9 +15,9 @@ type QuoteServer struct {
 }
 
 func NewQuoteServer() *QuoteServer {
-return &QuoteServer{
-  client: yahooclient.NewYahooFinanceClient(5), // 5s http timeout
-}
+  return &QuoteServer{
+    client: yahooclient.NewYahooFinanceClient(5), // 5s http timeout
+  }
 }
 
 func (q *QuoteServer) ListQuoteHistory(ctx context.Context, req *pb.QuoteRequest) (*pb.QuoteResponse, error) {
