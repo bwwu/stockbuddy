@@ -11,7 +11,6 @@ package swing_rejection
 import (
 	"errors"
 	"fmt"
-
 	"stockbuddy/analysis/lib/constants"
 	"stockbuddy/analysis/lib/rsi"
 )
@@ -38,16 +37,16 @@ func DetectSwingRejection(prices []float64, lookback int) (constants.Outlook, er
 		return 0, nil
 	}
 
-	// Indicates occurence of dip (Step 3)
+	// Indicates occurence of dip (Step 3).
 	var dipConfirmed bool
 	extremeRsi := lookbackSeries[start]
 	for i:=start+1; i<len(lookbackSeries)-1; i++ {
 		if extension == constants.Oversold {
 			if lookbackSeries[i] > extremeRsi {
-				// Step 2: RSI crosses above 30
+				// Step 2: RSI crosses above 30.
 				extremeRsi = lookbackSeries[i]
 			} else if lookbackSeries[i] < extremeRsi && lookbackSeries[i] > 30. {
-				// Step 3: RSI dips without crossing into oversold
+				// Step 3: RSI dips without crossing into oversold.
 				dipConfirmed = true
 			}
 		} else {
@@ -55,7 +54,7 @@ func DetectSwingRejection(prices []float64, lookback int) (constants.Outlook, er
 				// Step 2: RSI crosses below 70
 				extremeRsi = lookbackSeries[i]
 			} else if lookbackSeries[i] > extremeRsi && lookbackSeries[i] < 70. {
-				// Step 3: RSI rises without crossing into overbought
+				// Step 3: RSI rises without crossing into overbought.
 				dipConfirmed = true
 			}
 		}
