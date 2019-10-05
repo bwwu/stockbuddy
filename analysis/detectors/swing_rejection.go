@@ -6,12 +6,11 @@
  *  3. RSI forms another dip w/o xing back into oversold (overbought) territory
  *  4. RSI then breaks its most recent high (low)
  */
-package swing_rejection
+package detectors
 
 import (
-	"errors"
 	"fmt"
-	"stockbuddy/analysis/lib/constants"
+	"stockbuddy/analysis/constants"
 	"stockbuddy/analysis/lib/rsi"
 )
 
@@ -27,7 +26,7 @@ func DetectSwingRejection(prices []float64, lookback int) (constants.Outlook, er
 		return 0, err
 	}
 	if len(rsiSeries) < lookback {
-		return 0, errors.New(fmt.Sprintf("price series len %d insufficient for lookback period of %d days", len(prices), lookback))
+    return 0, fmt.Errorf("swing_rejection: price series len %d insufficient for lookback period of %d days", len(prices), lookback)
 	}
 
 	lookbackSeries := rsiSeries[len(rsiSeries)-lookback:]

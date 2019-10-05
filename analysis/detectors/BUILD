@@ -54,7 +54,7 @@ go_library(
 	srcs = ["swing_rejection.go"],
   importpath = "stockbuddy/analysis/detectors/swing_rejection",
 	deps = [
-		"//analysis/lib:constants",
+		"//analysis:constants",
 		"//analysis/lib:rsi",
 	],
 )
