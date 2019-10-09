@@ -63,7 +63,6 @@ var StocksToWatch = []string{
   "VRNS",
   "FICO",
   "PAYC",
-  "OKTA",
   "GOOG",
   "ADBE",
   "SEDG",
