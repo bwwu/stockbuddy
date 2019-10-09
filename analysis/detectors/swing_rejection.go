@@ -39,8 +39,8 @@ func (sr SwingRejection) Trend() constants.Trend {
 }
 
 type SwingRejectionDetector struct {
-  // lookback defines how far back in a price series to look for swings.
-  // period defines the N-period smoothing param for calculating RSI.
+  // Lookback defines how far back in a price series to look for swings.
+  // Period defines the N-period smoothing param for calculating RSI.
   lookback, period int
 }
 
@@ -80,7 +80,17 @@ func (d *SwingRejectionDetector) Process(quotes []*pb.Quote) (insight.Indicator,
   var dipConfirmed bool
   extremeRsi := lookbackSeries[start]
   for i:=start+1; i<len(lookbackSeries)-1; i++ {
-    if extension == constants.Oversold {
+    if dipConfirmed {
+      // Today's RSI must be the first time it crosses the extreme value.
+      // If it drops below the previous low, or above the high before today,
+      // then do not detect a swing rejection for today.
+      if extension == constants.Oversold && lookbackSeries[i] > extremeRsi {
+        return nil, nil
+      }
+      if extension == constants.Overbought && lookbackSeries[i] < extremeRsi {
+        return nil, nil
+      }
+    } else if extension == constants.Oversold {
       if lookbackSeries[i] > extremeRsi {
         // Step 2: RSI crosses above 30.
         extremeRsi = lookbackSeries[i]
