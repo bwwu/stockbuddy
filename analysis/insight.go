@@ -78,5 +78,8 @@ func (a *Analyzer) Analyze(ctx context.Context, symbol string) []Indicator {
       log.Println(err.Error())
     }
   }
+  if len(indicators) == 0 {
+    return nil
+  }
   return indicators
 }

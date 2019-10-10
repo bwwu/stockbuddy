@@ -3,6 +3,7 @@ package main
 import (
   "context"
   "log"
+  "time"
   "google.golang.org/grpc"
   "stockbuddy/smtp/sendmail"
   "stockbuddy/analysis/insight"
@@ -13,7 +14,9 @@ import (
 )
 
 func main() {
+  t1 := time.Now()
   conn, err := grpc.Dial("localhost:50051", grpc.WithInsecure())
+  defer conn.Close()
   if err != nil {
     log.Fatal(err.Error())
   }
@@ -21,12 +24,12 @@ func main() {
   summaries := process(client, StocksToWatch)
   if len(summaries) > 0 {
     for _, summ := range summaries {
-      log.Printf("main: %d indicators found for %s.\n", len(summ.Indicators), summ.Symbol)
+      log.Printf(`main: %d indicator(s) found for "%s".\n`, len(summ.Indicators), summ.Symbol)
     }
     msgBody := insight.TableFormat(summaries)
+    log.Printf("main: analysis took %d ms", time.Now().Sub(t1).Milliseconds())
     mail(msgBody)
   }
-  conn.Close()
 }
 
 func mail(content string) {
