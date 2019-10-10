@@ -1,4 +1,4 @@
-package detectors
+package macd_crossover
 
 import (
   "fmt"

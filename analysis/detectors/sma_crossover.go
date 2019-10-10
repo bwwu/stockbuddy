@@ -1,4 +1,4 @@
-package detectors
+package sma_crossover
 
 import (
   "fmt"

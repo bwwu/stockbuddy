@@ -6,7 +6,7 @@
  *  3. RSI forms another dip w/o xing back into oversold (overbought) territory
  *  4. RSI then breaks its most recent high (low)
  */
-package detectors
+package swing_rejection
 
 import (
   "fmt"

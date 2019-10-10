@@ -5,7 +5,7 @@ import (
   "log"
   "time"
   "google.golang.org/grpc"
-  "stockbuddy/smtp/sendmail"
+  "stockbuddy/smtp"
   "stockbuddy/analysis/insight"
   rsi "stockbuddy/analysis/detectors/swing_rejection"
   sma "stockbuddy/analysis/detectors/sma_crossover"
@@ -38,7 +38,7 @@ func mail(content string) {
 
   body := "<p>Reversal trends have been detected for the following stocks:</p>\n" + content
 
-  email := sendmail.Email{body, subject, recipients}
+  email := smtp.Email{body, subject, recipients}
   email.Send()
 }
 

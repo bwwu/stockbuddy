@@ -61,29 +61,9 @@ go_library(
     ],
 )
 
-go_library(
-    name = "go_default_library",
-    srcs = [
-        "macd_crossover.go",
-        "sma_crossover.go",
-        "swing_rejection.go",
-    ],
-    importpath = "stockbuddy/analysis/detectors",
-    deps = [
-        "//analysis:constants",
-        "//analysis:insight",
-        "//analysis/lib:macd",
-        "//analysis/lib:rsi",
-        "//analysis/lib:sma",
-        "//analysis/lib/crossover",
-        "//protos:go_default_library",
-    ],
-)
-
 go_test(
     name = "go_default_test",
     srcs = ["sma_crossover_test.go"],
-    embed = [":go_default_library"],
     deps = [
         ":sma_crossover",
         "//analysis:constants",

@@ -40,7 +40,7 @@ go_binary(
         "//analysis/detectors:sma_crossover",
         "//analysis/detectors:swing_rejection",
         "//protos:quote_go_proto",
-        "//smtp:sendmail",
+        "//smtp",
         "@org_golang_google_grpc//:go_default_library",
     ],
 )
