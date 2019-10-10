@@ -7,7 +7,7 @@ import (
   "stockbuddy/analysis/lib/macd"
   "stockbuddy/analysis/lib/sma"
   "stockbuddy/analysis/lib/crossover"
-  pb "stockbuddy/protos/quote_go_proto"
+  "stockbuddy/protos/quote"
 )
 
 // MACDDetector
@@ -30,7 +30,7 @@ func NewMACDDetector(shortTerm, longTerm, signalTerm int) (*MACDDetector, error)
   }, nil
 }
 
-func (d *MACDDetector) Process(quotes []*pb.Quote) (insight.Indicator, error) {
+func (d *MACDDetector) Process(quotes []*quote.Quote) (insight.Indicator, error) {
   // Collect closing prices.
   prices := make([]float64, 0, len(quotes))
   for _, quote := range quotes {

@@ -4,7 +4,7 @@ import (
   "log"
   "testing"
   "stockbuddy/analysis/constants"
-  pb "stockbuddy/protos/quote_go_proto"
+  "stockbuddy/protos/quote"
   sma "stockbuddy/analysis/detectors/sma_crossover"
 )
 
@@ -29,10 +29,10 @@ func TestBearishSMACrossover(t *testing.T) {
   }
 }
 
-func generateQuotes(prices []float64) []*pb.Quote {
-  quotes := make([]*pb.Quote, len(prices))
+func generateQuotes(prices []float64) []*quote.Quote {
+  quotes := make([]*quote.Quote, len(prices))
   for i,price := range prices {
-    quotes[i] = &pb.Quote{Close: price}
+    quotes[i] = &quote.Quote{Close: price}
   }
   return quotes
 }

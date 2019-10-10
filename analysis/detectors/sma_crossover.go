@@ -6,7 +6,7 @@ import (
   "stockbuddy/analysis/constants"
   "stockbuddy/analysis/lib/sma"
   "stockbuddy/analysis/lib/crossover"
-  pb "stockbuddy/protos/quote_go_proto"
+  "stockbuddy/protos/quote"
 )
 
 // SimpleMovingAverageDetector implements IndicatorFactory interface
@@ -25,7 +25,7 @@ func NewSimpleMovingAverageDetector(shortTerm, longTerm int) (*SimpleMovingAvera
   }, nil
 }
 
-func (detector *SimpleMovingAverageDetector) Process(quotes []*pb.Quote) (insight.Indicator, error) {
+func (detector *SimpleMovingAverageDetector) Process(quotes []*quote.Quote) (insight.Indicator, error) {
   if len(quotes) < detector.longTerm+1 {
     return nil, fmt.Errorf(
       "sma_crossover: unable to compute N-series SMA with N=%d for series length %d",

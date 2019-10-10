@@ -13,7 +13,7 @@ import (
   "stockbuddy/analysis/constants"
   "stockbuddy/analysis/insight"
   "stockbuddy/analysis/lib/rsi"
-  pb "stockbuddy/protos/quote_go_proto"
+  "stockbuddy/protos/quote"
 )
 
 type SwingRejection struct {
@@ -51,7 +51,7 @@ func NewSwingRejectionDetector(lookback, period int) (*SwingRejectionDetector) {
   }
 }
 
-func (d *SwingRejectionDetector) Process(quotes []*pb.Quote) (insight.Indicator, error) {
+func (d *SwingRejectionDetector) Process(quotes []*quote.Quote) (insight.Indicator, error) {
   prices := make([]float64, 0, len(quotes))
   for _, quote := range quotes {
     prices = append(prices, quote.Close)

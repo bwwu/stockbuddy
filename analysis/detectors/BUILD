@@ -67,6 +67,6 @@ go_test(
     deps = [
         ":sma_crossover",
         "//analysis:constants",
-        "//protos:go_default_library",
+        "//protos:quote_go_proto_lib",
     ],
 )

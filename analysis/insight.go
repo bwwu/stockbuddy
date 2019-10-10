@@ -6,7 +6,7 @@ import (
   "log"
 
   "stockbuddy/analysis/constants"
-  pb "stockbuddy/protos/quote_go_proto"
+  "stockbuddy/protos/quote"
 )
 
 type Indicator interface {
@@ -23,7 +23,7 @@ type Indicator interface {
 // Detector is a generic type. It computes the val of an indicator and provides
 // an interpretation, if any (e.g. Bearish reversal)
 type Detector interface {
-  Process([]*pb.Quote) (Indicator, error)
+  Process([]*quote.Quote) (Indicator, error)
 }
 
 type AnalyzerSummary struct {
@@ -34,16 +34,16 @@ type AnalyzerSummary struct {
 // Analyzer represents a series of computation which the caller can inoke
 // across multiple symbols.
 type Analyzer struct {
-  client pb.QuoteServiceClient
+  client quote.QuoteServiceClient
   detectors []Detector
 }
 
-func NewAnalyzer(client pb.QuoteServiceClient, detectors ...Detector) *Analyzer {
+func NewAnalyzer(client quote.QuoteServiceClient, detectors ...Detector) *Analyzer {
   return &Analyzer{client, detectors}
 }
 
 func (a *Analyzer) Analyze(ctx context.Context, symbol string) []Indicator {
-  req := &pb.QuoteRequest{Symbol: symbol, Period: 365}
+  req := &quote.QuoteRequest{Symbol: symbol, Period: 365}
   resp, err := a.client.ListQuoteHistory(ctx, req)
   if err != nil {
     log.Println(err.Error())

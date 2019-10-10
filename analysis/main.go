@@ -10,7 +10,7 @@ import (
   rsi "stockbuddy/analysis/detectors/swing_rejection"
   sma "stockbuddy/analysis/detectors/sma_crossover"
   macd "stockbuddy/analysis/detectors/macd_crossover"
-  pb "stockbuddy/protos/quote_go_proto"
+  "stockbuddy/protos/quote"
 )
 
 func main() {
@@ -20,7 +20,7 @@ func main() {
   if err != nil {
     log.Fatal(err.Error())
   }
-  client := pb.NewQuoteServiceClient(conn)
+  client := quote.NewQuoteServiceClient(conn)
   summaries := process(client, StocksToWatch)
   if len(summaries) > 0 {
     for _, summ := range summaries {
@@ -42,7 +42,7 @@ func mail(content string) {
   email.Send()
 }
 
-func process(client pb.QuoteServiceClient, stocks []string) []*insight.AnalyzerSummary {
+func process(client quote.QuoteServiceClient, stocks []string) []*insight.AnalyzerSummary {
   // Instantiate all of the detectors to run.
   detectors := make([]insight.Detector, 0, 3)
   if smaDetec, err := sma.NewSimpleMovingAverageDetector(12, 48); err != nil {
