@@ -1,9 +1,15 @@
-load("@io_bazel_rules_go//go:def.bzl",  "go_library")
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 package(default_visibility = ["//visibility:public"])
 
 go_library(
-  name = "sendmail",
-  srcs = ["sendmail.go"],
-  importpath = "stockbuddy/smtp/sendmail",
+    name = "sendmail",
+    srcs = ["sendmail.go"],
+    importpath = "stockbuddy/smtp/sendmail",
+)
+
+go_library(
+    name = "go_default_library",
+    srcs = ["sendmail.go"],
+    importpath = "stockbuddy/smtp",
 )
