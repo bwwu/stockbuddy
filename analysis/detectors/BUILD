@@ -60,13 +60,3 @@ go_library(
         "//protos:quote_go_proto",
     ],
 )
-
-go_test(
-    name = "go_default_test",
-    srcs = ["sma_crossover_test.go"],
-    deps = [
-        ":sma_crossover",
-        "//analysis:constants",
-        "//protos:quote_go_proto_lib",
-    ],
-)

@@ -4,9 +4,8 @@ import (
   "context"
   "log"
   "net"
-
   "google.golang.org/grpc"
-  pb "stockbuddy/protos/quote_go_proto"
+  "stockbuddy/protos/quote"
   yahooclient "stockbuddy/quote_service/yahoofinanceclient"
 )
 
@@ -20,28 +19,28 @@ func NewQuoteServer() *QuoteServer {
   }
 }
 
-func (q *QuoteServer) ListQuoteHistory(ctx context.Context, req *pb.QuoteRequest) (*pb.QuoteResponse, error) {
+func (q *QuoteServer) ListQuoteHistory(ctx context.Context, req *quote.QuoteRequest) (*quote.QuoteResponse, error) {
   quotes, err := q.client.GetQuoteHistory(req.Symbol, int(req.Period))
   if err != nil {
     log.Printf("quote_service: ListQuoteHistory(%v,%v) error\n,%v", req.Symbol, req.Period, err)
     return nil, err
   }
 
-  quoteProtos := make([]*pb.Quote, len(quotes.DailyQuotes))
-  for i, quote := range quotes.DailyQuotes {
-    quoteProtos[i] = &pb.Quote{
+  quoteProtos := make([]*quote.Quote, len(quotes.DailyQuotes))
+  for i, q := range quotes.DailyQuotes {
+    quoteProtos[i] = &quote.Quote{
       Symbol: req.Symbol,
-      Timestamp: quote.Timestamp.Unix(),
-      Open: quote.Open,
-      High: quote.High,
-      Low: quote.Low,
-      Close: quote.Close,
-      AdjClose: quote.AdjClose,
-      Volume: quote.Volume,
+      Timestamp: q.Timestamp.Unix(),
+      Open: q.Open,
+      High: q.High,
+      Low: q.Low,
+      Close: q.Close,
+      AdjClose: q.AdjClose,
+      Volume: q.Volume,
     }
   }
 
-  return &pb.QuoteResponse{Quotes: quoteProtos}, nil
+  return &quote.QuoteResponse{Quotes: quoteProtos}, nil
 }
 
 func main() {
@@ -50,7 +49,7 @@ func main() {
     log.Fatalf("Failed to listen on :50051 due to error: %s", err.Error())
   }
   server := grpc.NewServer()
-  pb.RegisterQuoteServiceServer(server, NewQuoteServer())
+  quote.RegisterQuoteServiceServer(server, NewQuoteServer())
 
   log.Println("Starting quote service on localhost:50051...")
   if err := server.Serve(list); err != nil {
