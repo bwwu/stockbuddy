@@ -1,15 +1,15 @@
-package macd_crossover_test
+package macdx_test
 
 import (
   "log"
   "testing"
   "stockbuddy/analysis/constants"
-  macd "stockbuddy/analysis/detectors/macd_crossover"
+  "stockbuddy/analysis/detectors/macdx"
   pb "stockbuddy/protos/quote_go_proto"
 )
 
 func TestBearishCrossover(t *testing.T) {
-  d, err := macd.NewMACDDetector(12, 26, 9)
+  d, err := macdx.NewMACDDetector(12, 26, 9)
   if err != nil {
     log.Fatal(err)
   }

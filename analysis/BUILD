@@ -1,32 +1,5 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
 
-go_library(
-  name = "stocks_to_watch",
-  importpath = "stockbuddy/analysis/stocks_to_watch",
-  srcs = ["stocks_to_watch.go"],
-)
-
-go_library(
-  name = "constants",
-  srcs = ["constants.go"],
-  importpath = "stockbuddy/analysis/constants",
-  visibility = ["//visibility:public"],
-)
-
-go_library(
-  name = "insight",
-  srcs = [
-    "insight.go",
-    "insight_formatter.go",
-  ],
-  importpath = "stockbuddy/analysis/insight",
-  visibility = ["//visibility:public"],
-  deps = [
-    "//analysis:constants",
-    "//protos:quote_go_proto",
-  ],
-)
-
 go_binary(
   name = "analysis",
   srcs = [
@@ -34,11 +7,10 @@ go_binary(
     "stocks_to_watch.go",
   ],
   deps = [
-    ":insight",
-    ":stocks_to_watch",
-    "//analysis/detectors:sma_crossover",
-    "//analysis/detectors:macd_crossover",
-    "//analysis/detectors:swing_rejection",
+    "//analysis/insight",
+    "//analysis/detectors/smax:sma_crossover",
+    "//analysis/detectors/macdx:macd_crossover",
+    "//analysis/detectors/swingrejection:swing_rejection",
     "//protos:quote_go_proto",
     "//smtp:sendmail",
     "@org_golang_google_grpc//:go_default_library",

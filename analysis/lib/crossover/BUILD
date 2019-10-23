@@ -6,7 +6,7 @@ go_library(
   name = "crossover",
   srcs = ["crossover.go"],
   importpath = "stockbuddy/analysis/lib/crossover",
-  deps = ["//analysis:constants"],
+  deps = ["//analysis/constants"],
 )
 
 go_test(
@@ -14,6 +14,6 @@ go_test(
   srcs = ["crossover_test.go"],
   deps = [
     ":crossover",
-    "//analysis:constants",
+    "//analysis/constants",
   ],
 )

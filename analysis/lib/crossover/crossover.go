@@ -2,7 +2,6 @@ package crossover
 
 import (
   "log"
-
   "stockbuddy/analysis/constants"
 )
 

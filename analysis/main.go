@@ -7,9 +7,9 @@ import (
   "google.golang.org/grpc"
   "stockbuddy/smtp/sendmail"
   "stockbuddy/analysis/insight"
-  rsi "stockbuddy/analysis/detectors/swing_rejection"
-  sma "stockbuddy/analysis/detectors/sma_crossover"
-  macd "stockbuddy/analysis/detectors/macd_crossover"
+  "stockbuddy/analysis/detectors/smax"
+  "stockbuddy/analysis/detectors/macdx"
+  "stockbuddy/analysis/detectors/swingrejection"
   pb "stockbuddy/protos/quote_go_proto"
 )
 
@@ -45,17 +45,17 @@ func mail(content string) {
 func process(client pb.QuoteServiceClient, stocks []string) []*insight.AnalyzerSummary {
   // Instantiate all of the detectors to run.
   detectors := make([]insight.Detector, 0, 3)
-  if smaDetec, err := sma.NewSimpleMovingAverageDetector(12, 48); err != nil {
+  if smaDetec, err := smax.NewSimpleMovingAverageDetector(12, 48); err != nil {
     log.Fatal(err)
   } else {
     detectors = append(detectors, smaDetec)
   }
-  if macdDetec, err := macd.NewMACDDetector(12, 26, 9); err != nil {
+  if macdDetec, err := macdx.NewMACDDetector(12, 26, 9); err != nil {
     log.Fatal(err)
   } else {
     detectors = append(detectors, macdDetec)
   }
-  detectors = append(detectors, rsi.NewSwingRejectionDetector(30, 14))
+  detectors = append(detectors, swingrejection.NewSwingRejectionDetector(30, 14))
 
   // Spawn goroutine to run analyzer over all detectors, one per stock.
   summaryc := make(chan *insight.AnalyzerSummary)

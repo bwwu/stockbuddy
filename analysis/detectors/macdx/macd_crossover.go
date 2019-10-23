@@ -1,4 +1,4 @@
-package detectors
+package macdx
 
 import (
   "fmt"
