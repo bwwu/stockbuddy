@@ -24,7 +24,7 @@ func main() {
   summaries := process(client, StocksToWatch)
   if len(summaries) > 0 {
     for _, summ := range summaries {
-      log.Printf(`main: %d indicator(s) found for "%s".\n`, len(summ.Indicators), summ.Symbol)
+      log.Printf(`main: %d indicator(s) found for "%s".`, len(summ.Indicators), summ.Symbol)
     }
     msgBody := insight.TableFormat(summaries)
     log.Printf("main: analysis took %d ms", time.Now().Sub(t1).Milliseconds())
