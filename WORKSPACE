@@ -12,6 +12,7 @@ http_archive(
 load("@io_bazel_rules_go//go:deps.bzl", "go_rules_dependencies", "go_register_toolchains")
 
 go_rules_dependencies()
+
 go_register_toolchains()
 
 # For working with protobufs
@@ -45,21 +46,26 @@ gazelle_dependencies()
 go_repository(
     name = "org_golang_google_grpc",
     build_file_proto_mode = "disable",
+    commit = "f6d0f9ee430895e87ef1ceb5ac8f39725bafceef",
     importpath = "google.golang.org/grpc",
-    sum = "h1:J0UbZOIrCAl+fpTOf8YLs4dJo8L/owV4LYVtAXQoPkw=",
-    version = "v1.22.0",
 )
 
 go_repository(
     name = "org_golang_x_net",
+    commit = "ec77196f6094c3492a8b61f2c11cf937f78992ae",
     importpath = "golang.org/x/net",
-    sum = "h1:oWX7TPOiFAMXLq8o0ikBYfCJVlRHBcsciT5bXOrH628=",
-    version = "v0.0.0-20190311183353-d8887717615a",
 )
 
 go_repository(
     name = "org_golang_x_text",
+    commit = "342b2e1fbaa52c93f31447ad2c6abc048c63e475",
     importpath = "golang.org/x/text",
-    sum = "h1:g61tztE5qeGQ89tm6NTjjM9VPIm088od1l6aSorWRWg=",
-    version = "v0.3.0",
+)
+go_repository(
+    name = "org_mongodb_go_mongo_driver",
+    build_file_generation = "on",
+    commit = "1261197350f3ad46a907489aee7ecc49b39efb82",
+    importpath = "go.mongodb.org/mongo-driver",
+    remote = "https://github.com/mongodb/mongo-go-driver",
+    vcs = "git",
 )
