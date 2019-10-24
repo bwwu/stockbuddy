@@ -1,7 +1,7 @@
 ## Requirements
 
-* [Bazel](https://docs.bazel.build/versions/master/install.html).
-* [go](https://golang.org/doc/install?download=go1.13.linux-amd64.tar.gz)
+* [Bazel](https://docs.bazel.build/versions/master/install.html)
+* [go](https://golang.org/doc/install)
 
 ## Running stockbuddy
 This is a 2-step process involving 2 separate binaries.
