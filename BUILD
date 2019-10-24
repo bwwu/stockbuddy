@@ -1,8 +1,3 @@
-load("@bazel_gazelle//:def.bzl", "gazelle")
-
-# gazelle:prefix stockbuddy
-gazelle(name = "gazelle")
-
 load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
 
 go_binary(
@@ -17,7 +12,7 @@ go_library(
     importpath = "stockbuddy",
     visibility = ["//visibility:private"],
     deps = [
-        "//vendor/go.mongodb.org/mongo-driver/mongo:go_default_library",
-        "//vendor/go.mongodb.org/mongo-driver/mongo/options:go_default_library",
+        "@org_mongodb_go_mongo_driver//mongo:go_default_library",
+        "@org_mongodb_go_mongo_driver//mongo/options:go_default_library",
     ],
 )
