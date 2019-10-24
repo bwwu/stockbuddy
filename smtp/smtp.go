@@ -1,4 +1,4 @@
-package sendmail
+package smtp
 
 import (
   "fmt"

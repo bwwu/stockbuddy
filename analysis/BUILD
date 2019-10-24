@@ -12,7 +12,7 @@ go_binary(
     "//analysis/detectors/macdx:macd_crossover",
     "//analysis/detectors/swingrejection:swing_rejection",
     "//protos:quote_go_proto",
-    "//smtp:sendmail",
+    "//smtp",
     "@org_golang_google_grpc//:go_default_library",
   ],
 )
