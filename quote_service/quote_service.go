@@ -7,16 +7,16 @@ import (
 
   "google.golang.org/grpc"
   pb "stockbuddy/protos/quote_go_proto"
-  yahooclient "stockbuddy/quote_service/yahoofinanceclient"
+  "stockbuddy/quote_service/yahoofinance"
 )
 
 type QuoteServer struct {
-  client *yahooclient.YahooFinanceClient
+  client *yahoofinance.YahooFinanceClient
 }
 
 func NewQuoteServer() *QuoteServer {
   return &QuoteServer{
-    client: yahooclient.NewYahooFinanceClient(5), // 5s http timeout
+    client: yahoofinance.NewYahooFinanceClient(5), // 5s http timeout
   }
 }
 

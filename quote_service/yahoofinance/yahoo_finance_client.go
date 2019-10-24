@@ -1,4 +1,4 @@
-package yahoofinanceclient
+package yahoofinance
 
 import (
   "fmt"
