@@ -1,0 +1,14 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["circuit_breaker.pb.go"],
+    importmap = "stockbuddy/vendor/google.golang.org/grpc/xds/internal/proto/envoy/api/v2/cluster/circuit_breaker",
+    importpath = "google.golang.org/grpc/xds/internal/proto/envoy/api/v2/cluster/circuit_breaker",
+    visibility = ["//vendor/google.golang.org/grpc/xds:__subpackages__"],
+    deps = [
+        "//vendor/google.golang.org/grpc/xds/internal/proto/envoy/api/v2/core/base:go_default_library",
+        "@com_github_golang_protobuf//proto:go_default_library",
+        "@io_bazel_rules_go//proto/wkt:wrappers_go_proto",
+    ],
+)

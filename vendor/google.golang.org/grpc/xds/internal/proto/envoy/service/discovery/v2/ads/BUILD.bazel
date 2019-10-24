@@ -1,0 +1,15 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["ads.pb.go"],
+    importmap = "stockbuddy/vendor/google.golang.org/grpc/xds/internal/proto/envoy/service/discovery/v2/ads",
+    importpath = "google.golang.org/grpc/xds/internal/proto/envoy/service/discovery/v2/ads",
+    visibility = ["//vendor/google.golang.org/grpc/xds:__subpackages__"],
+    deps = [
+        "//vendor/golang.org/x/net/context:go_default_library",
+        "//vendor/google.golang.org/grpc/xds/internal/proto/envoy/api/v2/discovery:go_default_library",
+        "@com_github_golang_protobuf//proto:go_default_library",
+        "@org_golang_google_grpc//:go_default_library",
+    ],
+)

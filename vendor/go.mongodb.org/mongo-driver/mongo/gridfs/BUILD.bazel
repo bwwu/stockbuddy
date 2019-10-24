@@ -1,0 +1,52 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "bucket.go",
+        "download_stream.go",
+        "upload_stream.go",
+    ],
+    importmap = "stockbuddy/vendor/go.mongodb.org/mongo-driver/mongo/gridfs",
+    importpath = "go.mongodb.org/mongo-driver/mongo/gridfs",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/go.mongodb.org/mongo-driver/bson:go_default_library",
+        "//vendor/go.mongodb.org/mongo-driver/bson/bsontype:go_default_library",
+        "//vendor/go.mongodb.org/mongo-driver/bson/primitive:go_default_library",
+        "//vendor/go.mongodb.org/mongo-driver/mongo:go_default_library",
+        "//vendor/go.mongodb.org/mongo-driver/mongo/options:go_default_library",
+        "//vendor/go.mongodb.org/mongo-driver/mongo/readconcern:go_default_library",
+        "//vendor/go.mongodb.org/mongo-driver/mongo/readpref:go_default_library",
+        "//vendor/go.mongodb.org/mongo-driver/mongo/writeconcern:go_default_library",
+        "//vendor/go.mongodb.org/mongo-driver/x/bsonx:go_default_library",
+        "//vendor/go.mongodb.org/mongo-driver/x/bsonx/bsoncore:go_default_library",
+    ],
+)
+
+go_test(
+    name = "go_default_test",
+    srcs = [
+        "gridfs_retryable_spec_test.go",
+        "gridfs_spec_test.go",
+        "gridfs_test.go",
+        "gridfs_util_test.go",
+    ],
+    embed = [":go_default_library"],
+    deps = [
+        "//vendor/go.mongodb.org/mongo-driver/bson:go_default_library",
+        "//vendor/go.mongodb.org/mongo-driver/bson/bsontype:go_default_library",
+        "//vendor/go.mongodb.org/mongo-driver/bson/primitive:go_default_library",
+        "//vendor/go.mongodb.org/mongo-driver/event:go_default_library",
+        "//vendor/go.mongodb.org/mongo-driver/internal/testutil:go_default_library",
+        "//vendor/go.mongodb.org/mongo-driver/internal/testutil/helpers:go_default_library",
+        "//vendor/go.mongodb.org/mongo-driver/internal/testutil/israce:go_default_library",
+        "//vendor/go.mongodb.org/mongo-driver/mongo:go_default_library",
+        "//vendor/go.mongodb.org/mongo-driver/mongo/options:go_default_library",
+        "//vendor/go.mongodb.org/mongo-driver/mongo/readconcern:go_default_library",
+        "//vendor/go.mongodb.org/mongo-driver/mongo/writeconcern:go_default_library",
+        "//vendor/go.mongodb.org/mongo-driver/x/bsonx:go_default_library",
+        "//vendor/golang.org/x/net/context:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+    ],
+)

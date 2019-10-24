@@ -1,0 +1,18 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "channel_conn.go",
+        "channel_netconn.go",
+    ],
+    importmap = "stockbuddy/vendor/go.mongodb.org/mongo-driver/x/mongo/driver/drivertest",
+    importpath = "go.mongodb.org/mongo-driver/x/mongo/driver/drivertest",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/go.mongodb.org/mongo-driver/x/bsonx/bsoncore:go_default_library",
+        "//vendor/go.mongodb.org/mongo-driver/x/mongo/driver/address:go_default_library",
+        "//vendor/go.mongodb.org/mongo-driver/x/mongo/driver/description:go_default_library",
+        "//vendor/go.mongodb.org/mongo-driver/x/mongo/driver/wiremessage:go_default_library",
+    ],
+)

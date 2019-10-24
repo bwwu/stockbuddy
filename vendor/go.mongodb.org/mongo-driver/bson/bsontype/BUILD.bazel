@@ -1,0 +1,15 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["bsontype.go"],
+    importmap = "stockbuddy/vendor/go.mongodb.org/mongo-driver/bson/bsontype",
+    importpath = "go.mongodb.org/mongo-driver/bson/bsontype",
+    visibility = ["//visibility:public"],
+)
+
+go_test(
+    name = "go_default_test",
+    srcs = ["bsontype_test.go"],
+    embed = [":go_default_library"],
+)

@@ -1,0 +1,21 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "edf.go",
+        "random.go",
+        "wrr.go",
+    ],
+    importmap = "stockbuddy/vendor/google.golang.org/grpc/internal/wrr",
+    importpath = "google.golang.org/grpc/internal/wrr",
+    visibility = ["//vendor/google.golang.org/grpc:__subpackages__"],
+    deps = ["//vendor/google.golang.org/grpc/internal/grpcrand:go_default_library"],
+)
+
+go_test(
+    name = "go_default_test",
+    srcs = ["wrr_test.go"],
+    embed = [":go_default_library"],
+    deps = ["@com_github_google_go_cmp//cmp:go_default_library"],
+)

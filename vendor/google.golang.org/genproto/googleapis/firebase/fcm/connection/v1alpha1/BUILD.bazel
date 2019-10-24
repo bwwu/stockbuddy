@@ -1,0 +1,17 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["connection_api.pb.go"],
+    importmap = "stockbuddy/vendor/google.golang.org/genproto/googleapis/firebase/fcm/connection/v1alpha1",
+    importpath = "google.golang.org/genproto/googleapis/firebase/fcm/connection/v1alpha1",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/google.golang.org/grpc/codes:go_default_library",
+        "//vendor/google.golang.org/grpc/status:go_default_library",
+        "@com_github_golang_protobuf//proto:go_default_library",
+        "@go_googleapis//google/api:annotations_go_proto",
+        "@io_bazel_rules_go//proto/wkt:timestamp_go_proto",
+        "@org_golang_google_grpc//:go_default_library",
+    ],
+)

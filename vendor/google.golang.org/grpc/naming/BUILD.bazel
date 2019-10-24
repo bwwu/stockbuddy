@@ -1,0 +1,19 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "dns_resolver.go",
+        "naming.go",
+    ],
+    importmap = "stockbuddy/vendor/google.golang.org/grpc/naming",
+    importpath = "google.golang.org/grpc/naming",
+    visibility = ["//visibility:public"],
+    deps = ["//vendor/google.golang.org/grpc/grpclog:go_default_library"],
+)
+
+go_test(
+    name = "go_default_test",
+    srcs = ["dns_resolver_test.go"],
+    embed = [":go_default_library"],
+)

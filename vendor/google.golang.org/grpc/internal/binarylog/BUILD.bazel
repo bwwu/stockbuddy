@@ -1,0 +1,48 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "binarylog.go",
+        "binarylog_testutil.go",
+        "env_config.go",
+        "method_logger.go",
+        "sink.go",
+        "util.go",
+    ],
+    importmap = "stockbuddy/vendor/google.golang.org/grpc/internal/binarylog",
+    importpath = "google.golang.org/grpc/internal/binarylog",
+    visibility = ["//vendor/google.golang.org/grpc:__subpackages__"],
+    deps = [
+        "//vendor/google.golang.org/grpc/binarylog/grpc_binarylog_v1:go_default_library",
+        "//vendor/google.golang.org/grpc/grpclog:go_default_library",
+        "//vendor/google.golang.org/grpc/metadata:go_default_library",
+        "//vendor/google.golang.org/grpc/status:go_default_library",
+        "@com_github_golang_protobuf//proto:go_default_library",
+        "@com_github_golang_protobuf//ptypes:go_default_library_gen",
+    ],
+)
+
+go_test(
+    name = "go_default_test",
+    srcs = [
+        "binarylog_end2end_test.go",
+        "binarylog_test.go",
+        "env_config_test.go",
+        "method_logger_test.go",
+        "regexp_test.go",
+        "util_test.go",
+    ],
+    embed = [":go_default_library"],
+    deps = [
+        "//vendor/google.golang.org/grpc/binarylog/grpc_binarylog_v1:go_default_library",
+        "//vendor/google.golang.org/grpc/codes:go_default_library",
+        "//vendor/google.golang.org/grpc/grpclog:go_default_library",
+        "//vendor/google.golang.org/grpc/metadata:go_default_library",
+        "//vendor/google.golang.org/grpc/stats/grpc_testing:go_default_library",
+        "//vendor/google.golang.org/grpc/status:go_default_library",
+        "@com_github_golang_protobuf//proto:go_default_library",
+        "@io_bazel_rules_go//proto/wkt:duration_go_proto",
+        "@org_golang_google_grpc//:go_default_library",
+    ],
+)

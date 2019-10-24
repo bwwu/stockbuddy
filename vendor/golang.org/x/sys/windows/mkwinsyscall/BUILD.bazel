@@ -1,0 +1,15 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["mkwinsyscall.go"],
+    importmap = "stockbuddy/vendor/golang.org/x/sys/windows/mkwinsyscall",
+    importpath = "golang.org/x/sys/windows/mkwinsyscall",
+    visibility = ["//visibility:private"],
+)
+
+go_binary(
+    name = "mkwinsyscall",
+    embed = [":go_default_library"],
+    visibility = ["//visibility:public"],
+)

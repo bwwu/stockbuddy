@@ -1,0 +1,36 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "client.go",
+        "client_conv.go",
+        "common.go",
+        "doc.go",
+        "parse.go",
+        "scram.go",
+        "server.go",
+        "server_conv.go",
+    ],
+    importmap = "stockbuddy/vendor/github.com/xdg/scram",
+    importpath = "github.com/xdg/scram",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/xdg/stringprep:go_default_library",
+        "//vendor/golang.org/x/crypto/pbkdf2:go_default_library",
+    ],
+)
+
+go_test(
+    name = "go_default_test",
+    srcs = [
+        "client_conv_test.go",
+        "common_test.go",
+        "doc_test.go",
+        "server_conv_test.go",
+        "testdata_test.go",
+    ],
+    data = glob(["testdata/**"]),
+    embed = [":go_default_library"],
+    deps = ["//vendor/github.com/xdg/stringprep:go_default_library"],
+)

@@ -1,0 +1,32 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["examples.go"],
+    importmap = "stockbuddy/vendor/go.mongodb.org/mongo-driver/examples/documentation_examples",
+    importpath = "go.mongodb.org/mongo-driver/examples/documentation_examples",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/go.mongodb.org/mongo-driver/bson:go_default_library",
+        "//vendor/go.mongodb.org/mongo-driver/bson/primitive:go_default_library",
+        "//vendor/go.mongodb.org/mongo-driver/mongo:go_default_library",
+        "//vendor/go.mongodb.org/mongo-driver/mongo/options:go_default_library",
+        "//vendor/go.mongodb.org/mongo-driver/mongo/readconcern:go_default_library",
+        "//vendor/go.mongodb.org/mongo-driver/mongo/readpref:go_default_library",
+        "//vendor/go.mongodb.org/mongo-driver/mongo/writeconcern:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+    ],
+)
+
+go_test(
+    name = "go_default_test",
+    srcs = ["examples_test.go"],
+    embed = [":go_default_library"],
+    deps = [
+        "//vendor/go.mongodb.org/mongo-driver/internal/testutil:go_default_library",
+        "//vendor/go.mongodb.org/mongo-driver/mongo:go_default_library",
+        "//vendor/go.mongodb.org/mongo-driver/mongo/options:go_default_library",
+        "//vendor/go.mongodb.org/mongo-driver/x/bsonx:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+    ],
+)

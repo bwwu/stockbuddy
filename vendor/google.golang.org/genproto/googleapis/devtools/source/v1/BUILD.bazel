@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["source_context.pb.go"],
+    importmap = "stockbuddy/vendor/google.golang.org/genproto/googleapis/devtools/source/v1",
+    importpath = "google.golang.org/genproto/googleapis/devtools/source/v1",
+    visibility = ["//visibility:public"],
+    deps = [
+        "@com_github_golang_protobuf//proto:go_default_library",
+        "@go_googleapis//google/api:annotations_go_proto",
+    ],
+)

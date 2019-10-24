@@ -1,0 +1,15 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["xds_experimental.go"],
+    importmap = "stockbuddy/vendor/google.golang.org/grpc/xds/experimental",
+    importpath = "google.golang.org/grpc/xds/experimental",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/google.golang.org/grpc/balancer:go_default_library",
+        "//vendor/google.golang.org/grpc/resolver:go_default_library",
+        "//vendor/google.golang.org/grpc/xds/internal/balancer:go_default_library",
+        "//vendor/google.golang.org/grpc/xds/internal/resolver:go_default_library",
+    ],
+)

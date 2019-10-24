@@ -1,0 +1,58 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "balancergroup.go",
+        "edsbalancer.go",
+        "util.go",
+    ],
+    importmap = "stockbuddy/vendor/google.golang.org/grpc/xds/internal/balancer/edsbalancer",
+    importpath = "google.golang.org/grpc/xds/internal/balancer/edsbalancer",
+    visibility = ["//vendor/google.golang.org/grpc/xds:__subpackages__"],
+    deps = [
+        "//vendor/google.golang.org/grpc/balancer:go_default_library",
+        "//vendor/google.golang.org/grpc/balancer/base:go_default_library",
+        "//vendor/google.golang.org/grpc/balancer/roundrobin:go_default_library",
+        "//vendor/google.golang.org/grpc/balancer/weightedroundrobin:go_default_library",
+        "//vendor/google.golang.org/grpc/codes:go_default_library",
+        "//vendor/google.golang.org/grpc/connectivity:go_default_library",
+        "//vendor/google.golang.org/grpc/grpclog:go_default_library",
+        "//vendor/google.golang.org/grpc/internal/wrr:go_default_library",
+        "//vendor/google.golang.org/grpc/resolver:go_default_library",
+        "//vendor/google.golang.org/grpc/status:go_default_library",
+        "//vendor/google.golang.org/grpc/xds/internal:go_default_library",
+        "//vendor/google.golang.org/grpc/xds/internal/balancer/lrs:go_default_library",
+        "//vendor/google.golang.org/grpc/xds/internal/proto/envoy/api/v2/eds:go_default_library",
+        "//vendor/google.golang.org/grpc/xds/internal/proto/envoy/api/v2/endpoint/endpoint:go_default_library",
+        "//vendor/google.golang.org/grpc/xds/internal/proto/envoy/type/percent:go_default_library",
+        "//vendor/google.golang.org/grpc/xds/internal/proto/udpa/data/orca/v1/orca_load_report:go_default_library",
+    ],
+)
+
+go_test(
+    name = "go_default_test",
+    srcs = [
+        "balancergroup_test.go",
+        "edsbalancer_test.go",
+        "test_util_test.go",
+        "util_test.go",
+    ],
+    embed = [":go_default_library"],
+    deps = [
+        "//vendor/google.golang.org/grpc/balancer:go_default_library",
+        "//vendor/google.golang.org/grpc/balancer/roundrobin:go_default_library",
+        "//vendor/google.golang.org/grpc/connectivity:go_default_library",
+        "//vendor/google.golang.org/grpc/internal/wrr:go_default_library",
+        "//vendor/google.golang.org/grpc/resolver:go_default_library",
+        "//vendor/google.golang.org/grpc/xds/internal:go_default_library",
+        "//vendor/google.golang.org/grpc/xds/internal/proto/envoy/api/v2/core/address:go_default_library",
+        "//vendor/google.golang.org/grpc/xds/internal/proto/envoy/api/v2/core/base:go_default_library",
+        "//vendor/google.golang.org/grpc/xds/internal/proto/envoy/api/v2/eds:go_default_library",
+        "//vendor/google.golang.org/grpc/xds/internal/proto/envoy/api/v2/endpoint/endpoint:go_default_library",
+        "//vendor/google.golang.org/grpc/xds/internal/proto/envoy/type/percent:go_default_library",
+        "//vendor/google.golang.org/grpc/xds/internal/proto/udpa/data/orca/v1/orca_load_report:go_default_library",
+        "@io_bazel_rules_go//proto/wkt:wrappers_go_proto",
+        "@org_golang_google_grpc//:go_default_library",
+    ],
+)

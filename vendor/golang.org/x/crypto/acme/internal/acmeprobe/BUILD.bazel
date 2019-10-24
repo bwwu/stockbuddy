@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["prober.go"],
+    importmap = "stockbuddy/vendor/golang.org/x/crypto/acme/internal/acmeprobe",
+    importpath = "golang.org/x/crypto/acme/internal/acmeprobe",
+    visibility = ["//visibility:private"],
+    deps = ["//vendor/golang.org/x/crypto/acme:go_default_library"],
+)
+
+go_binary(
+    name = "acmeprobe",
+    embed = [":go_default_library"],
+    visibility = ["//vendor/golang.org/x/crypto/acme:__subpackages__"],
+)

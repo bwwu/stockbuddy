@@ -1,0 +1,18 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["grpc_service.pb.go"],
+    importmap = "stockbuddy/vendor/google.golang.org/grpc/xds/internal/proto/envoy/api/v2/core/grpc_service",
+    importpath = "google.golang.org/grpc/xds/internal/proto/envoy/api/v2/core/grpc_service",
+    visibility = ["//vendor/google.golang.org/grpc/xds:__subpackages__"],
+    deps = [
+        "//vendor/google.golang.org/grpc/xds/internal/proto/envoy/api/v2/core/base:go_default_library",
+        "//vendor/google.golang.org/grpc/xds/internal/proto/validate:go_default_library",
+        "@com_github_golang_protobuf//proto:go_default_library",
+        "@io_bazel_rules_go//proto/wkt:any_go_proto",
+        "@io_bazel_rules_go//proto/wkt:duration_go_proto",
+        "@io_bazel_rules_go//proto/wkt:empty_go_proto",
+        "@io_bazel_rules_go//proto/wkt:struct_go_proto",
+    ],
+)

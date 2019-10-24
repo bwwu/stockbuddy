@@ -1,0 +1,31 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "pipe_listener.go",
+        "status_equal.go",
+    ],
+    importmap = "stockbuddy/vendor/google.golang.org/grpc/internal/testutils",
+    importpath = "google.golang.org/grpc/internal/testutils",
+    visibility = ["//vendor/google.golang.org/grpc:__subpackages__"],
+    deps = [
+        "//vendor/google.golang.org/grpc/status:go_default_library",
+        "@com_github_golang_protobuf//proto:go_default_library",
+    ],
+)
+
+go_test(
+    name = "go_default_test",
+    srcs = [
+        "pipe_listener_test.go",
+        "status_equal_test.go",
+    ],
+    embed = [":go_default_library"],
+    deps = [
+        "//vendor/google.golang.org/grpc/codes:go_default_library",
+        "//vendor/google.golang.org/grpc/status:go_default_library",
+        "@go_googleapis//google/rpc:status_go_proto",
+        "@io_bazel_rules_go//proto/wkt:any_go_proto",
+    ],
+)

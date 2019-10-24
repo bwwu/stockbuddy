@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["main.go"],
+    importmap = "stockbuddy/vendor/go.mongodb.org/mongo-driver/cmd/godriver-benchmark",
+    importpath = "go.mongodb.org/mongo-driver/cmd/godriver-benchmark",
+    visibility = ["//visibility:private"],
+    deps = ["//vendor/go.mongodb.org/mongo-driver/benchmark:go_default_library"],
+)
+
+go_binary(
+    name = "godriver-benchmark",
+    embed = [":go_default_library"],
+    visibility = ["//visibility:public"],
+)

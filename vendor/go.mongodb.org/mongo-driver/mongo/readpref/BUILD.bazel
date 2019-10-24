@@ -1,0 +1,24 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "mode.go",
+        "options.go",
+        "readpref.go",
+    ],
+    importmap = "stockbuddy/vendor/go.mongodb.org/mongo-driver/mongo/readpref",
+    importpath = "go.mongodb.org/mongo-driver/mongo/readpref",
+    visibility = ["//visibility:public"],
+    deps = ["//vendor/go.mongodb.org/mongo-driver/tag:go_default_library"],
+)
+
+go_test(
+    name = "go_default_test",
+    srcs = ["readpref_test.go"],
+    embed = [":go_default_library"],
+    deps = [
+        "//vendor/go.mongodb.org/mongo-driver/tag:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+    ],
+)

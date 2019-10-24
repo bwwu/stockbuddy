@@ -1,0 +1,44 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "client_session.go",
+        "cluster_clock.go",
+        "options.go",
+        "server_session.go",
+        "session_pool.go",
+    ],
+    importmap = "stockbuddy/vendor/go.mongodb.org/mongo-driver/x/mongo/driver/session",
+    importpath = "go.mongodb.org/mongo-driver/x/mongo/driver/session",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/go.mongodb.org/mongo-driver/bson:go_default_library",
+        "//vendor/go.mongodb.org/mongo-driver/bson/primitive:go_default_library",
+        "//vendor/go.mongodb.org/mongo-driver/mongo/readconcern:go_default_library",
+        "//vendor/go.mongodb.org/mongo-driver/mongo/readpref:go_default_library",
+        "//vendor/go.mongodb.org/mongo-driver/mongo/writeconcern:go_default_library",
+        "//vendor/go.mongodb.org/mongo-driver/x/bsonx:go_default_library",
+        "//vendor/go.mongodb.org/mongo-driver/x/mongo/driver/description:go_default_library",
+        "//vendor/go.mongodb.org/mongo-driver/x/mongo/driver/uuid:go_default_library",
+    ],
+)
+
+go_test(
+    name = "go_default_test",
+    srcs = [
+        "client_session_test.go",
+        "cluster_clock_test.go",
+        "server_session_test.go",
+        "session_pool_test.go",
+    ],
+    embed = [":go_default_library"],
+    deps = [
+        "//vendor/go.mongodb.org/mongo-driver/bson/primitive:go_default_library",
+        "//vendor/go.mongodb.org/mongo-driver/internal/testutil/helpers:go_default_library",
+        "//vendor/go.mongodb.org/mongo-driver/x/bsonx/bsoncore:go_default_library",
+        "//vendor/go.mongodb.org/mongo-driver/x/mongo/driver/description:go_default_library",
+        "//vendor/go.mongodb.org/mongo-driver/x/mongo/driver/uuid:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+    ],
+)
