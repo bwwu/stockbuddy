@@ -10,8 +10,8 @@ go_binary(
     name = "quote_service",
     srcs = ["quote_service.go"],
     deps = [
-        ":yahoo_finance_client",
         "//protos:quote_go_proto",
+        "//quote_service/yahoofinance:yahoo_finance_client",
         "@org_golang_google_grpc//:go_default_library",
     ],
 )

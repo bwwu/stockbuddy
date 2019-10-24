@@ -7,21 +7,21 @@ import (
 
   "google.golang.org/grpc"
   pb "stockbuddy/protos/quote_go_proto"
-  yahooclient "stockbuddy/quote_service/yahoofinanceclient"
+  "stockbuddy/quote_service/yahoofinance"
 )
 
 type QuoteServer struct {
-  client *yahooclient.YahooFinanceClient
+  client *yahoofinance.YahooFinanceClient
 }
 
 func NewQuoteServer() *QuoteServer {
   return &QuoteServer{
-    client: yahooclient.NewYahooFinanceClient(5), // 5s http timeout
+    client: yahoofinance.NewYahooFinanceClient(5), // 5s http timeout
   }
 }
 
 func (q *QuoteServer) ListQuoteHistory(ctx context.Context, req *pb.QuoteRequest) (*pb.QuoteResponse, error) {
-  quotes, err := q.client.GetQuoteHistory(req.Symbol, int(req.Period))
+  quotes, err := q.client.GetQuoteHistory(ctx, req.Symbol, int(req.Period))
   if err != nil {
     log.Printf("quote_service: ListQuoteHistory(%v,%v) error\n,%v", req.Symbol, req.Period, err)
     return nil, err
