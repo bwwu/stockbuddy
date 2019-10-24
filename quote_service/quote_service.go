@@ -21,7 +21,7 @@ func NewQuoteServer() *QuoteServer {
 }
 
 func (q *QuoteServer) ListQuoteHistory(ctx context.Context, req *pb.QuoteRequest) (*pb.QuoteResponse, error) {
-  quotes, err := q.client.GetQuoteHistory(req.Symbol, int(req.Period))
+  quotes, err := q.client.GetQuoteHistory(ctx, req.Symbol, int(req.Period))
   if err != nil {
     log.Printf("quote_service: ListQuoteHistory(%v,%v) error\n,%v", req.Symbol, req.Period, err)
     return nil, err

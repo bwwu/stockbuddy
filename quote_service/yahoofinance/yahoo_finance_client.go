@@ -3,6 +3,7 @@ package yahoofinance
 import (
   "fmt"
   "strconv"
+  "context"
   "time"
   "encoding/csv"
   "net/http"
@@ -31,7 +32,7 @@ func NewYahooFinanceClient(timeoutInSec int) *YahooFinanceClient {
   }
 }
 
-func (y *YahooFinanceClient) GetQuoteHistory(symbol string, days int) (*QuoteHistory, error) {
+func (y *YahooFinanceClient) GetQuoteHistory(ctx context.Context, symbol string, days int) (*QuoteHistory, error) {
   cookies := map[string]string{
     "B": "ajch0f5elj4sp",
     "APID": "1Adf2ce59c-c1e2-11e9-adce-025f25c4bfdc",
@@ -44,7 +45,7 @@ func (y *YahooFinanceClient) GetQuoteHistory(symbol string, days int) (*QuoteHis
   // Params: symbol, start timestamp, end timestamp
   const urlFormat = "https://query1.finance.yahoo.com/v7/finance/download/%s?period1=%d&period2=%d&interval=1d&events=history&crumb=pRB6UiIiFnn"
 
-  req, err := http.NewRequest("GET", fmt.Sprintf(urlFormat, symbol, timeStart.Unix(), timeEnd.Unix()), nil)
+  req, err := http.NewRequestWithContext(ctx, "GET", fmt.Sprintf(urlFormat, symbol, timeStart.Unix(), timeEnd.Unix()), nil)
   if err != nil {
     return nil, err
   }
