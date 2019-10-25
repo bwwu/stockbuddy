@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package stockbuddy;
+
+option go_package = "stockbuddy/protos/insight_go_proto";
+
+message Insight {
+  enum Outlook {
+    UNKNOWN = 0;
+    BEARISH = 1;
+    BULLISH = 2;
+  }
+  string symbol = 1;
+  string indicator = 2;
+  int64 timestamp = 3;
+}
+
+message AddInsightRequest {
+  repeated Insight insights = 1;
+}
+
+message AddInsightResponse {}
+
+message FetchInsightRequest {
+  int64 timestamp_start = 1;
+  int64 timestamp_end = 2;
+  string symbol = 3;
+}
+
+message FetchInsightResponse {
+  repeated Insight insights = 1;
+}
+
+service InsightStore {
+  rpc AddInsight(AddInsightRequest) returns (AddInsightResponse);
+  rpc FetchInsight(FetchInsightRequest) returns (FetchInsightResponse);
+}

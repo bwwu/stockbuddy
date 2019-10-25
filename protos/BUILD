@@ -13,3 +13,15 @@ go_proto_library(
   importpath ="stockbuddy/protos/quote_go_proto",
   proto = ":quote_proto",
 )
+
+proto_library(
+  name = "insight_proto",
+  srcs = ["insight.proto"],
+)
+
+go_proto_library(
+  name = "insight_go_proto",
+  compiler = "@io_bazel_rules_go//proto:go_grpc",
+  importpath ="stockbuddy/protos/insight_go_proto",
+  proto = ":insight_proto",
+)
