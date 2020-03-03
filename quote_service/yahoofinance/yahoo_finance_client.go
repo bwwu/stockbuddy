@@ -21,7 +21,7 @@ type QuoteHistory struct {
 type DailyQuote struct {
   Timestamp time.Time
   Open, High, Low, Close, AdjClose float64
-  Volume uint32
+  Volume uint64
 }
 
 func NewYahooFinanceClient(timeoutInSec int) *YahooFinanceClient {
@@ -79,7 +79,7 @@ func (y *YahooFinanceClient) GetQuoteHistory(ctx context.Context, symbol string,
     // Values open, high, low, close, adj_close should be floats
     // TODO don't ignore errors
     floats, _ := parseFloats(row[1:6])
-    volume, _ := strconv.ParseUint(row[6], 10, 32)
+    volume, _ := strconv.ParseUint(row[6], 10, 64)
     timestamp, _ := time.Parse("2006-01-02", row[0])
     history.DailyQuotes[i] = DailyQuote{
       Timestamp: timestamp,
@@ -88,7 +88,7 @@ func (y *YahooFinanceClient) GetQuoteHistory(ctx context.Context, symbol string,
       Low: floats[2],
       Close: floats[3],
       AdjClose: floats[4],
-      Volume: uint32(volume),
+      Volume: uint64(volume),
     }
   }
   return &history, nil

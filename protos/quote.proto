@@ -10,7 +10,7 @@ message Quote {
 	double low = 5;
 	double close = 6;
 	double adj_close = 7;
-	uint32 volume = 8;
+	uint64 volume = 8;
 }
 
 message QuoteRequest {

@@ -46,7 +46,7 @@ func mail(body string) {
 
 type volsummary struct {
   symbol string
-  day, avg5day, avg365day uint32
+  day, avg5day, avg365day uint64
   pdiffv5day, pdiffv365day float64
 }
 
@@ -57,7 +57,7 @@ func summarizeVolume(ctx context.Context, client pb.QuoteServiceClient, symbol s
     return nil, err
   }
 
-  volumes := make([]uint32, 0, len(resp.Quotes))
+  volumes := make([]uint64, 0, len(resp.Quotes))
   for _, quote := range resp.Quotes {
     volumes = append(volumes, quote.Volume)
   }
@@ -72,17 +72,17 @@ func summarizeVolume(ctx context.Context, client pb.QuoteServiceClient, symbol s
 }
 
 // avgvol calculates avg vol of a list of uint32s, rouding to a uint32.
-func avgvol(n int, volumes []uint32) uint32 {
+func avgvol(n int, volumes []uint64) uint64 {
   var sum uint64
   for _, vol := range volumes[len(volumes)-n:] {
     sum += uint64(vol)
   }
-  return uint32(math.Round(float64(sum)/float64(n)))
+  return uint64(math.Round(float64(sum)/float64(n)))
 }
 
 // pdiff calculates percentage difference of reference vs a compare
-func pdiff(ref, cmp uint32) float64 {
-  diff := cmp-ref
+func pdiff(ref, cmp uint64) float64 {
+  diff := int64(cmp)-int64(ref)
   return 100.*float64(diff)/float64(ref)
 }
 
@@ -122,5 +122,4 @@ func tableFormat(summaries []*volsummary) string {
 
   b.WriteString("</table>")
   return b.String()
-}
-
+} 

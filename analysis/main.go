@@ -34,7 +34,7 @@ func main() {
 
 func mail(content string) {
   subject := "Reversal Trends Detected"
-  recipients := []string{"brandonwu23@gmail.com"}
+  recipients := []string{"brandonwu23@gmail.com", "anthonywu.ad@gmail.com"}
 
   body := "<p>Reversal trends have been detected for the following stocks:</p>\n" + content
 
