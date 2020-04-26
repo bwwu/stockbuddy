@@ -78,9 +78,21 @@ func (y *YahooFinanceClient) GetQuoteHistory(ctx context.Context, symbol string,
   for i, row := range rows {
     // Values open, high, low, close, adj_close should be floats
     // TODO don't ignore errors
-    floats, _ := parseFloats(row[1:6])
-    volume, _ := strconv.ParseUint(row[6], 10, 64)
-    timestamp, _ := time.Parse("2006-01-02", row[0])
+    floats, err := parseFloats(row[1:6])
+    if err != nil {
+      return nil, err
+    }
+
+    volume, err := strconv.ParseUint(row[6], 10, 64)
+    if err != nil {
+      return nil, err
+    }
+
+    timestamp, err := time.Parse("2006-01-02", row[0])
+    if err != nil {
+      return nil, err
+    }
+
     history.DailyQuotes[i] = DailyQuote{
       Timestamp: timestamp,
       Open: floats[0],
