@@ -22,3 +22,12 @@ bazel run //analysis
 
 This binary connects to the RPC service started in step 1, runs the analyzers
 and then dies.
+
+## Compiling stockbuddy
+Stockbuddy currently runs on raspberry Pi's. However, bazel is currently
+unsupported on Arm, so we must compile for the Pi and scp the binary,
+which can be done via:
+
+```sh
+bazel build //quote_service --platforms=//:rpi_linux-arm
+```
