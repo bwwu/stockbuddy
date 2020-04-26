@@ -6,11 +6,13 @@ go_binary(
     "main.go",
     "stocks_to_watch.go",
   ],
+  data = ["//watchlists"],
   deps = [
     "//analysis/insight",
     "//analysis/detectors/smax:sma_crossover",
     "//analysis/detectors/macdx:macd_crossover",
     "//analysis/detectors/swingrejection:swing_rejection",
+    "//fileio",
     "//protos:quote_go_proto",
     "//smtp",
     "@org_golang_google_grpc//:go_default_library",

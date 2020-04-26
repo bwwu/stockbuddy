@@ -2,6 +2,7 @@ package main
 
 import (
   "context"
+  "flag"
   "log"
   "time"
   "google.golang.org/grpc"
@@ -10,10 +11,15 @@ import (
   "stockbuddy/analysis/detectors/smax"
   "stockbuddy/analysis/detectors/macdx"
   "stockbuddy/analysis/detectors/swingrejection"
+  "stockbuddy/fileio"
   pb "stockbuddy/protos/quote_go_proto"
 )
 
+var flagNomail = flag.Bool("nomail", false, "Set to true to disable sending email reports.")
+var flagWatchlist = flag.String("use_watchlist", "watchlists/default.txt", "Path to txt file with a list of stocks to track.")
+
 func main() {
+  flag.Parse()
   t1 := time.Now()
   conn, err := grpc.Dial("localhost:50051", grpc.WithInsecure())
   defer conn.Close()
@@ -21,14 +27,23 @@ func main() {
     log.Fatal(err.Error())
   }
   client := pb.NewQuoteServiceClient(conn)
-  summaries := process(client, StocksToWatch)
+
+  watchlist, err := fileio.ReadLines(*flagWatchlist)
+  if err != nil {
+    log.Fatal(err.Error())
+  }
+
+  summaries := process(client, watchlist)
   if len(summaries) > 0 {
     for _, summ := range summaries {
       log.Printf(`main: %d indicator(s) found for "%s".`, len(summ.Indicators), summ.Symbol)
     }
     msgBody := insight.TableFormat(summaries)
     log.Printf("main: analysis took %d ms", time.Now().Sub(t1).Milliseconds())
-    mail(msgBody)
+
+    if (!*flagNomail) {
+      mail(msgBody)
+    }
   }
 }
 
