@@ -12,8 +12,8 @@ type Email struct {
 	Recipients    []string
 }
 
-func (e *Email) Send() error {
-	auth := smtp.PlainAuth(defaultSender.name, defaultSender.email, defaultSender.password, smtpServer)
+func (e *Email) Send(password string) error {
+	auth := smtp.PlainAuth(defaultSender.name, defaultSender.email, password, smtpServer)
 	if err := smtp.SendMail(smtpServer+":587", auth, defaultSender.email, e.Recipients, getEmailContent(e)); err != nil {
 		log.Print(err)
 		return err
@@ -24,11 +24,11 @@ func (e *Email) Send() error {
 
 var (
 	smtpServer    = "smtp.gmail.com"
-	defaultSender = sender{"tradingbot88@gmail.com", "Trade Bot", "makemoney888$"}
+	defaultSender = sender{"tradingbot88@gmail.com", "Trade Bot"}
 )
 
 type sender struct {
-	email, name, password string
+	email, name string
 }
 
 func getEmailContent(e *Email) []byte {

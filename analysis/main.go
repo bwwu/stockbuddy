@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"os"
 	"regexp"
 	"stockbuddy/analysis/detectors/macdx"
 	"stockbuddy/analysis/detectors/smax"
@@ -28,13 +29,6 @@ var (
 
 func main() {
 	flag.Parse()
-	t1 := time.Now()
-	conn, err := grpc.Dial("localhost:50051", grpc.WithInsecure())
-	defer conn.Close()
-	if err != nil {
-		log.Fatal(err.Error())
-	}
-	client := pb.NewQuoteServiceClient(conn)
 
 	watchlist, err := fileio.ReadLines(*flagWatchlist)
 	if err != nil {
@@ -46,6 +40,19 @@ func main() {
 		log.Fatal(err)
 	}
 
+	emailPassword := os.Getenv("STOCKBUDDY_PASSWORD")
+	if emailPassword == "" && !*flagNomail {
+		log.Fatal("main: password unset. Set email credentials on env $STOCKBUDDY_PASSWORD.")
+	}
+
+	t1 := time.Now()
+	conn, err := grpc.Dial("localhost:50051", grpc.WithInsecure())
+	defer conn.Close()
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+	client := pb.NewQuoteServiceClient(conn)
+
 	summaries := process(client, watchlist)
 	if len(summaries) > 0 {
 		for _, summ := range summaries {
@@ -55,19 +62,19 @@ func main() {
 		log.Printf("main: analysis took %d ms", time.Now().Sub(t1).Milliseconds())
 
 		if !*flagNomail {
-			mail(msgBody, mailList)
+			mail(emailPassword, msgBody, mailList)
 		}
 	}
 }
 
-func mail(content string, recipients []string) {
+func mail(password, content string, recipients []string) {
 	subject := "Reversal Trends Detected"
 	//recipients := []string{"brandonwu23@gmail.com", "anthonywu.ad@gmail.com"}
 
 	body := "<p>Reversal trends have been detected for the following stocks:</p>\n" + content
 
 	email := smtp.Email{body, subject, recipients}
-	email.Send()
+	email.Send(password)
 }
 
 // Given a comma-separated-list of emails given by a flag value, return a list of validated email
