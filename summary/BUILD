@@ -13,11 +13,13 @@ go_binary(
 )
 
 go_binary(
-  name = "daily",
-  srcs = ["daily.go"],
+  name = "dailyprices",
+  srcs = ["dailyprices.go"],
+  data = ["//watchlists"],
   deps = [
     "//analysis/detectors/pricedelta",
     "//analysis/insight",
+    "//fileio",
     "//protos:quote_go_proto",
     "//smtp",
     "@org_golang_google_grpc//:go_default_library",

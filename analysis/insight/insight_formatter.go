@@ -3,6 +3,8 @@ package insight
 import (
 	"bytes"
 	"fmt"
+	"sort"
+	"strings"
 )
 
 type row struct {
@@ -43,36 +45,44 @@ func FormatByIndicator(summaries []*AnalyzerSummary) string {
 	if len(summaries) == 0 {
 		return ""
 	}
-	cols := make(map[string]bool)
+	colm := make(map[string]bool)
+	var cols []string
 	var rows []row
 	for _, s := range summaries {
 		indicators := make(map[string]Indicator)
 		for _, i := range s.Indicators {
 			// If new column name discovered, add it to the set.
-			if _, ok := cols[i.Name()]; !ok {
-				cols[i.Name()] = true
+			if _, ok := colm[i.Name()]; !ok {
+				colm[i.Name()] = true
+				cols = append(cols, i.Name())
 			}
 			indicators[i.Name()] = i
 		}
 		rows = append(rows, row{s.Symbol, indicators})
 	}
-	heading := `<table width="640" align="center" border="1"><tr><th>Symbol</th>`
+	sort.Strings(cols)
+
 	var b bytes.Buffer
+	heading := `<table width="640" align="center" border="1"><tr><th>Symbol</th>`
 	b.WriteString(heading)
-	for col := range cols {
+	for _, col := range cols {
 		b.WriteString(fmt.Sprintf("<th>%s</th>", col))
 	}
 	b.WriteString("</tr>\n")
 
 	for _, r := range rows {
 		b.WriteString(fmt.Sprintf("<tr><td>%s</td>", r.symbol))
-		for col := range cols {
+		for _, col := range cols {
 			val, ok := r.indicators[col]
 			if !ok {
 				// If this symbol doesn't have this indicator, print a blank.
 				b.WriteString("<td>-</td>")
 			} else {
-				b.WriteString(fmt.Sprintf("<td>%s</td>", val.Summary()))
+				color := "red"
+				if strings.Contains(val.Summary(), "+") {
+					color = "green"
+				}
+				b.WriteString(fmt.Sprintf(`<td style="color:%s;">%s</td>`, color, val.Summary()))
 			}
 		}
 		b.WriteString("</tr>\n")

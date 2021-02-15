@@ -14,8 +14,8 @@ type Detector struct {
 
 // NewDetector creates a PriceDelta detector.
 func NewDetector(period int) (*Detector, error) {
-	// Can't look back negative days, also restrict to 1 year.
-	if period < 0 || period > 253 {
+	// Can't look back negative days. Also restrict to 1yr.
+	if period < 1 || period > 253 {
 		return nil, fmt.Errorf(`pricedelta: cannot period "%d" days`, period)
 	}
 	return &Detector{period}, nil
@@ -23,7 +23,7 @@ func NewDetector(period int) (*Detector, error) {
 
 // NewDefaultDetector creates a price delta detector over today (close - open)
 func NewDefaultDetector() *Detector {
-	d, _ := NewDetector(0)
+	d, _ := NewDetector(1)
 	return d
 }
 
@@ -38,15 +38,16 @@ func (d *Detector) Process(quotes []*pb.Quote) (insight.Indicator, error) {
 		)
 	}
 	close := quotes[len(quotes)-1].Close
-	open := quotes[len(quotes)-d.period-1].Open
+	prev := quotes[len(quotes)-d.period-1].Close
+
 	outlook := constants.Bearish
-	if close > open {
+	if close > prev {
 		outlook = constants.Bullish
 	}
 	return &PriceDelta{
 		d.period,
-		close - open,
-		(close - open) * 100. / open,
+		close - prev,
+		(close - prev) * 100. / prev,
 		outlook,
 	}, nil
 }
