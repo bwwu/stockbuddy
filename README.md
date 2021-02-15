@@ -17,13 +17,15 @@ This starts an RPC server on localhost:50051.
 ### 2. Run the analyzer.
 
 ```sh
-bazel run //analysis -- \
+STOCKBUDDY_PASSWORD=<myPassword> bazel run //analysis \
+  --action_env=STOCKBUDDY_PASSWORD
+  -- \
   --use_watchlist=<relative_path> (OPTIONAL) \
   --mail_to=<comma_separated_list>  \
   --nomail (OPTIONAL) \
 ```
 
-You must also set the env var `$STOCKBUDDY_PASSWORD` to the email user credentials.
+You must set the env var `$STOCKBUDDY_PASSWORD` to the email user credentials.
 
 This binary connects to the RPC service started in step 1, runs the analyzers
 and then dies.
