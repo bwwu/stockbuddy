@@ -4,7 +4,6 @@ go_binary(
   name = "analysis",
   srcs = [
     "main.go",
-    "stocks_to_watch.go",
   ],
   data = ["//watchlists"],
   deps = [

@@ -69,7 +69,6 @@ func main() {
 
 func mail(password, content string, recipients []string) {
 	subject := "Reversal Trends Detected"
-	//recipients := []string{"brandonwu23@gmail.com", "anthonywu.ad@gmail.com"}
 
 	body := "<p>Reversal trends have been detected for the following stocks:</p>\n" + content
 
@@ -80,6 +79,9 @@ func mail(password, content string, recipients []string) {
 // Given a comma-separated-list of emails given by a flag value, return a list of validated email
 // addresses.
 func parseEmailsFromList(raw string) ([]string, error) {
+	if *flagNomail {
+		return []string{}, nil
+	}
 	errPrefix := "main::parseEmailFromList():"
 	result := strings.Split(raw, ",")
 
