@@ -46,7 +46,7 @@ func main() {
 	}
 
 	t1 := time.Now()
-	conn, err := grpc.Dial("localhost:50051", grpc.WithInsecure())
+	conn, err := grpc.Dial(":50051", grpc.WithInsecure())
 	defer conn.Close()
 	if err != nil {
 		log.Fatal(err.Error())

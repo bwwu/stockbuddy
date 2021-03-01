@@ -38,3 +38,27 @@ which can be done via:
 ```sh
 bazel build //quote_service --platforms=//:rpi_linux-arm
 ```
+
+## Using docker (new)
+
+First install [Docker](https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository).
+
+```sh
+bazel run //quote_service:image
+```
+To build an image for loading into docker on a raspi:
+
+```
+# Might instead need to add 'goarch = "arm"' to the "go_image" rule
+bazel build //quote_service:image.tar --platforms=//:rpi_linux-arm
+# scp the image.tar to the Pi
+docker load -i bazel-bin/quote_service/image.tar
+docker run --restart=always -p 50051:50051 <IMAGE_ID>
+```
+
+
+### References
+
+* [bazelbuild/docker](https://github.com/bazelbuild/rules_docker/blob/master/README.md)
+
+* https://github.com/bazelbuild/rules_go/blob/master/go/core.rst#cross-compilation
