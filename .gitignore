@@ -1,0 +1,7 @@
+*.swp
+bazel-bin
+bazel-genfiles
+bazel-out
+bazel-testlogs
+bazel-stockbuddy
+nyse.txt
