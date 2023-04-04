@@ -7,17 +7,16 @@ import (
 	"log"
 	"os"
 	"regexp"
-	"stockbuddy/analysis/detectors/macdx"
-	"stockbuddy/analysis/detectors/smax"
-	"stockbuddy/analysis/detectors/swingrejection"
-	"stockbuddy/analysis/insight"
-	"stockbuddy/fileio"
-	pb "stockbuddy/protos/quote_go_proto"
-	"stockbuddy/smtp"
 	"strings"
 	"time"
 
-	"google.golang.org/grpc"
+	"github.com/bwwu/stockbuddy/analysis/detectors/macdx"
+	"github.com/bwwu/stockbuddy/analysis/detectors/smax"
+	"github.com/bwwu/stockbuddy/analysis/detectors/swingrejection"
+	"github.com/bwwu/stockbuddy/analysis/insight"
+	"github.com/bwwu/stockbuddy/fileio"
+	"github.com/bwwu/stockbuddy/quote"
+	"github.com/bwwu/stockbuddy/smtp"
 )
 
 var (
@@ -46,12 +45,7 @@ func main() {
 	}
 
 	t1 := time.Now()
-	conn, err := grpc.Dial(":50051", grpc.WithInsecure())
-	defer conn.Close()
-	if err != nil {
-		log.Fatal(err.Error())
-	}
-	client := pb.NewQuoteServiceClient(conn)
+	client := quote.NewQuoteClient()
 
 	summaries := process(client, watchlist)
 	if len(summaries) > 0 {
@@ -98,7 +92,7 @@ func parseEmailsFromList(raw string) ([]string, error) {
 	return result, nil
 }
 
-func process(client pb.QuoteServiceClient, stocks []string) []*insight.AnalyzerSummary {
+func process(client quote.QuoteClient, stocks []string) []*insight.AnalyzerSummary {
 	// Instantiate all of the detectors to run.
 	detectors := make([]insight.Detector, 0, 3)
 	if smaDetec, err := smax.NewSimpleMovingAverageDetector(12, 48); err != nil {

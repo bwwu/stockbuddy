@@ -1,15 +1,14 @@
-package crossover_test
+package crossover
 
 import (
   "testing"
   "stockbuddy/analysis/constants"
-  "stockbuddy/analysis/lib/crossover"
 )
 
 func TestCrossoverSeries(t *testing.T) {
   cmp := []float64{5., 3., 1., 9., 6.}
   ref := []float64{0., 4., 0., 7., 8.}
-  actual := crossover.DetectCrossovers(cmp, ref)
+  actual := DetectCrossovers(cmp, ref)
   expected := []constants.Outlook{constants.Bearish, constants.Bullish, 0, constants.Bearish}
   testCrossoverSeriesEqual(t, expected, actual)
 }

@@ -1,19 +1,18 @@
-package rsi_test
+package rsi
 
 import (
   "log"
   "testing"
-  "stockbuddy/analysis/lib/rsi"
 )
 
 func TestRsi14(t *testing.T) {
   want := 61.187409242787304
-  got, err := rsi.RelativeStrengthIndex(14, testPrices)
+  got, err := RelativeStrengthIndex(14, testPrices)
   if err != nil {
     log.Fatal(err)
   }
   if got != want {
-    t.Errorf("rsi.RelativeStrengthIndex(%v, %v) = %v, want %v", 14, testPrices, got, want)
+    t.Errorf("RelativeStrengthIndex(%v, %v) = %v, want %v", 14, testPrices, got, want)
   }
 }
 

@@ -2,7 +2,7 @@ package crossover
 
 import (
   "log"
-  "stockbuddy/analysis/constants"
+  "github.com/bwwu/stockbuddy/analysis/constants"
 )
 
 // DetectCrossover determines Crossover points of two price series.

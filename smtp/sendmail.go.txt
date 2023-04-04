@@ -1,4 +1,4 @@
-package sendmail
+package smtp
 
 import (
   "fmt"
@@ -8,8 +8,8 @@ import (
 )
 
 type Email struct {
-  Body, Subject string
-  Recipients []string
+	Body, Subject string
+	Recipients    []string
 }
 
 func (e *Email) Send() error {

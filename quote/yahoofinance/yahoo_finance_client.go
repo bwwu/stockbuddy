@@ -1,24 +1,19 @@
 package yahoofinance
 
 import (
-  "fmt"
-  "strconv"
-  "context"
-  "time"
-  "encoding/csv"
-  "net/http"
+	"fmt"
+	"strconv"
+	"context"
+	"time"
+	"encoding/csv"
+	"net/http"
 )
 
 type YahooFinanceClient struct {
   client http.Client
 }
 
-type QuoteHistory struct {
-  Symbol string
-  DailyQuotes []DailyQuote
-}
-
-type DailyQuote struct {
+type YFQuote struct {
   Timestamp time.Time
   Open, High, Low, Close, AdjClose float64
   Volume uint64
@@ -32,7 +27,7 @@ func NewYahooFinanceClient(timeoutInSec int) *YahooFinanceClient {
   }
 }
 
-func (y *YahooFinanceClient) GetQuoteHistory(ctx context.Context, symbol string, days int) (*QuoteHistory, error) {
+func (y *YahooFinanceClient) GetQuoteHistory(ctx context.Context, symbol string, days int) ([]*YFQuote, error) {
   cookies := map[string]string{
     "B": "ajch0f5elj4sp",
     "APID": "1Adf2ce59c-c1e2-11e9-adce-025f25c4bfdc",
@@ -70,10 +65,9 @@ func (y *YahooFinanceClient) GetQuoteHistory(ctx context.Context, symbol string,
   }
 
   rows = rows[1:]
-  history := QuoteHistory{
-    Symbol: symbol,
-    DailyQuotes: make([]DailyQuote, len(rows)),
-  }
+  quotes := make([]*YFQuote, len(rows))
+
+  
 
   for i, row := range rows {
     // Values open, high, low, close, adj_close should be floats
@@ -93,7 +87,7 @@ func (y *YahooFinanceClient) GetQuoteHistory(ctx context.Context, symbol string,
       return nil, err
     }
 
-    history.DailyQuotes[i] = DailyQuote{
+    quotes[i] = &YFQuote{
       Timestamp: timestamp,
       Open: floats[0],
       High: floats[1],
@@ -103,7 +97,7 @@ func (y *YahooFinanceClient) GetQuoteHistory(ctx context.Context, symbol string,
       Volume: uint64(volume),
     }
   }
-  return &history, nil
+  return quotes, nil
 }
 
 func parseFloats(strs []string) ([]float64, error) {

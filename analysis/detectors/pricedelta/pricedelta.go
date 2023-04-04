@@ -2,9 +2,9 @@ package pricedelta
 
 import (
 	"fmt"
-	"stockbuddy/analysis/constants"
-	"stockbuddy/analysis/insight"
-	pb "stockbuddy/protos/quote_go_proto"
+	"github.com/bwwu/stockbuddy/analysis/constants"
+	"github.com/bwwu/stockbuddy/analysis/insight"
+	"github.com/bwwu/stockbuddy/quote"
 )
 
 // Detector is a summary detector, which always emits an indicator with the price delta over a period.
@@ -29,7 +29,7 @@ func NewDefaultDetector() *Detector {
 
 // Process subtracts open price from "period" trading days ago from the close price
 // of the most recent trading day.
-func (d *Detector) Process(quotes []*pb.Quote) (insight.Indicator, error) {
+func (d *Detector) Process(quotes []*quote.Quote) (insight.Indicator, error) {
 	if len(quotes) < d.period+1 {
 		return nil, fmt.Errorf(
 			"pricedelta: not enough quotes (%d) in series to compute %d-day delta",

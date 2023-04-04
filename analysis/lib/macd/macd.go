@@ -4,7 +4,7 @@ package macd
 
 import (
   "fmt"
-  "stockbuddy/analysis/lib/sma"
+  "github.com/bwwu/stockbuddy/analysis/lib/sma"
 )
 
 // MovingAverageConvergenceDivergenceSeries returns the difference between

@@ -13,9 +13,9 @@ type Email struct {
 }
 
 func (e *Email) Send(password string) error {
-	auth := smtp.PlainAuth(defaultSender.name, defaultSender.email, password, smtpServer)
+	auth := smtp.PlainAuth("", defaultSender.email, password, smtpServer)
 	if err := smtp.SendMail(smtpServer+":587", auth, defaultSender.email, e.Recipients, getEmailContent(e)); err != nil {
-		log.Print(err)
+		log.Printf("smtp: error '%v'", err)
 		return err
 	}
 	log.Printf("smtp: email(s) sent to %s", strings.Join(e.Recipients, ","))

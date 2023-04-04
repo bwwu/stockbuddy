@@ -2,7 +2,7 @@ package bollinger
 
 import (
 	"math"
-	"stockbuddy/analysis/lib/sma"
+	"github.com/bwwu/stockbuddy/analysis/lib/sma"
 )
 
 type BollingerBands struct {

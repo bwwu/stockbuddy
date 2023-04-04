@@ -1,15 +1,14 @@
-package smax_test
+package smax
 
 import (
   "log"
   "testing"
-  "stockbuddy/analysis/constants"
-  "stockbuddy/analysis/detectors/smax"
-  pb "stockbuddy/protos/quote_go_proto"
+  "analysis/constants"
+  "quote"
 )
 
 func TestBearishSMACrossover(t *testing.T) {
-  detector,_ := smax.NewSimpleMovingAverageDetector(12, 48)
+  detector,_ := NewSimpleMovingAverageDetector(12, 48)
   quotes := generateQuotes(testBearish)
   crossover, err := detector.Process(quotes)
   if err != nil {
@@ -29,10 +28,10 @@ func TestBearishSMACrossover(t *testing.T) {
   }
 }
 
-func generateQuotes(prices []float64) []*pb.Quote {
-  quotes := make([]*pb.Quote, len(prices))
+func generateQuotes(prices []float64) []*quote.Quote {
+  quotes := make([]*quote.Quote, len(prices))
   for i,price := range prices {
-    quotes[i] = &pb.Quote{Close: price}
+    quotes[i] = &quote.Quote{Close: price}
   }
   return quotes
 }
