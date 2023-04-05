@@ -1,9 +1,9 @@
 package percentile
 
 import (
-  "fmt"
-  "sort"
-  "math"
+	"fmt"
+	"math"
+	"sort"
 )
 
 // At returns the value in a list which is at a certain percentile.
@@ -24,6 +24,6 @@ func At(percentile int, values []int) (int, error) {
 // For example, `Of(997, values)` returns the percentile of 997 in a list of vals.
 func Of(val int, values []int) int {
 	sort.Ints(values)
-	firstGTE := sort.Search(len(values), func (i int) bool { return values[i] >= val })
-	return firstGTE*100/len(values)
+	firstGTE := sort.Search(len(values), func(i int) bool { return values[i] >= val })
+	return firstGTE * 100 / len(values)
 }
