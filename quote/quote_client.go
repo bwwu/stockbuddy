@@ -2,8 +2,8 @@ package quote
 
 import (
 	"context"
-	"log"
 	"github.com/bwwu/stockbuddy/quote/yahoofinance"
+	"log"
 )
 
 type QuoteClient struct {
@@ -39,4 +39,3 @@ func (q *QuoteClient) ListQuoteHistory(ctx context.Context, symbol string, perio
 
 	return quotes, nil
 }
-
