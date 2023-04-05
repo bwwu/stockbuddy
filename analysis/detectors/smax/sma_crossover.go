@@ -2,11 +2,11 @@ package smax
 
 import (
   "fmt"
-  "stockbuddy/analysis/insight"
-  "stockbuddy/analysis/constants"
-  "stockbuddy/analysis/lib/sma"
-  "stockbuddy/analysis/lib/crossover"
-  pb "stockbuddy/protos/quote_go_proto"
+  "github.com/bwwu/stockbuddy/analysis/insight"
+  "github.com/bwwu/stockbuddy/analysis/constants"
+  "github.com/bwwu/stockbuddy/analysis/lib/sma"
+  "github.com/bwwu/stockbuddy/analysis/lib/crossover"
+  "github.com/bwwu/stockbuddy/quote"
 )
 
 // SimpleMovingAverageDetector implements IndicatorFactory interface
@@ -25,7 +25,7 @@ func NewSimpleMovingAverageDetector(shortTerm, longTerm int) (*SimpleMovingAvera
   }, nil
 }
 
-func (detector *SimpleMovingAverageDetector) Process(quotes []*pb.Quote) (insight.Indicator, error) {
+func (detector *SimpleMovingAverageDetector) Process(quotes []*quote.Quote) (insight.Indicator, error) {
   if len(quotes) < detector.longTerm+1 {
     return nil, fmt.Errorf(
       "sma_crossover: unable to compute N-series SMA with N=%d for series length %d",

@@ -2,12 +2,12 @@ package macdx
 
 import (
   "fmt"
-  "stockbuddy/analysis/constants"
-  "stockbuddy/analysis/insight"
-  "stockbuddy/analysis/lib/macd"
-  "stockbuddy/analysis/lib/sma"
-  "stockbuddy/analysis/lib/crossover"
-  pb "stockbuddy/protos/quote_go_proto"
+  "github.com/bwwu/stockbuddy/analysis/constants"
+  "github.com/bwwu/stockbuddy/analysis/insight"
+  "github.com/bwwu/stockbuddy/analysis/lib/macd"
+  "github.com/bwwu/stockbuddy/analysis/lib/sma"
+  "github.com/bwwu/stockbuddy/analysis/lib/crossover"
+  "github.com/bwwu/stockbuddy/quote"
 )
 
 // MACDDetector
@@ -30,11 +30,11 @@ func NewMACDDetector(shortTerm, longTerm, signalTerm int) (*MACDDetector, error)
   }, nil
 }
 
-func (d *MACDDetector) Process(quotes []*pb.Quote) (insight.Indicator, error) {
+func (d *MACDDetector) Process(quotes []*quote.Quote) (insight.Indicator, error) {
   // Collect closing prices.
   prices := make([]float64, 0, len(quotes))
-  for _, quote := range quotes {
-    prices = append(prices, quote.Close)
+  for _, q := range quotes {
+    prices = append(prices, q.Close)
   }
 
   macdSeries, err := macd.MovingAverageConvergenceDivergenceSeries(d.shortTerm, d.longTerm, prices)

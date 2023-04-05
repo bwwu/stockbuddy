@@ -1,15 +1,14 @@
-package macdx_test
+package macdx
 
 import (
   "log"
   "testing"
-  "stockbuddy/analysis/constants"
-  "stockbuddy/analysis/detectors/macdx"
-  pb "stockbuddy/protos/quote_go_proto"
+  "analysis/constants"
+  "quote"
 )
 
 func TestBearishCrossover(t *testing.T) {
-  d, err := macdx.NewMACDDetector(12, 26, 9)
+  d, err := NewMACDDetector(12, 26, 9)
   if err != nil {
     log.Fatal(err)
   }
@@ -34,10 +33,10 @@ func TestBearishCrossover(t *testing.T) {
   }
 }
 
-func pricesToQuotes(prices []float64) []*pb.Quote {
-  quotes := make([]*pb.Quote, 0, len(prices))
+func pricesToQuotes(prices []float64) []*quote.Quote {
+  quotes := make([]*quote.Quote, 0, len(prices))
   for _, price := range prices {
-    quotes = append(quotes, &pb.Quote{Close: price})
+    quotes = append(quotes, &quote.Quote{Close: price})
   }
   return quotes
 }

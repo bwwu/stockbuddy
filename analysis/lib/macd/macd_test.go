@@ -1,21 +1,20 @@
-package macd_test
+package macd
 
 import (
   "log"
   "testing"
-  "stockbuddy/analysis/lib/macd"
-  "stockbuddy/analysis/lib/sma"
+  "analysis/lib/sma"
 )
 
 func TestMACD(t *testing.T) {
-  macd, err := macd.MovingAverageConvergenceDivergenceSeries(12, 26, testSeries)
+  macd, err := MovingAverageConvergenceDivergenceSeries(12, 26, testSeries)
   if err != nil {
     log.Fatal(err)
   }
   want := 15.897515583845006
   got := macd[len(macd)-1]
   if want != got {
-    t.Errorf("macd.MovingAverageConvergenceDivergenceSeries(...) = %v, want %v", got, want)
+    t.Errorf("MovingAverageConvergenceDivergenceSeries(...) = %v, want %v", got, want)
   }
 
   signalLine, err := sma.ExponentialMovingAverage(9, macd)

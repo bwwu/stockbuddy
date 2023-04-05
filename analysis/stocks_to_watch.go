@@ -1,4 +1,4 @@
-package main
+package analysis
 
 var StocksToWatch = []string{
   "AXP",

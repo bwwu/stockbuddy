@@ -1,9 +1,8 @@
-package percentile_test
+package percentile
 
 import (
   "log"
   "testing"
-  "stockbuddy/analysis/lib/percentile"
 )
 
 func TestPercentile(t *testing.T) {
@@ -25,21 +24,21 @@ func TestPercentile(t *testing.T) {
 }
 
 func checkAt(t *testing.T, want, p int, input []int) {
-  got, err := percentile.At(p, input)
+  got, err := At(p, input)
   if err != nil {
     log.Fatal(err)
   }
 
   if want != got {
-    t.Errorf("percentile.At(%v, %v) = %v, want %v", p, input, got, want)
+    t.Errorf("At(%v, %v) = %v, want %v", p, input, got, want)
   }
 }
 
 func checkOf(t *testing.T, want, val int, input []int) {
-  got := percentile.Of(val, input)
+  got := Of(val, input)
 
   if want != got {
-    t.Errorf("percentile.Of(%v, %v) = %v, want %v", val, input, got, want)
+    t.Errorf("Of(%v, %v) = %v, want %v", val, input, got, want)
   }
 }
 

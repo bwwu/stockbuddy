@@ -1,9 +1,8 @@
-package moving_average_test
+package sma 
 
 import (
   "log"
   "testing"
-  "stockbuddy/analysis/lib/sma"
 )
 func TestSimpleMovingAverage(t *testing.T) {
   cases := []struct{period int; testSeries []float64; want float64} {
@@ -14,12 +13,12 @@ func TestSimpleMovingAverage(t *testing.T) {
   }
 
   for _, tc := range cases {
-    got, err := sma.SimpleMovingAverage(tc.period, tc.testSeries)
+    got, err := SimpleMovingAverage(tc.period, tc.testSeries)
     if err != nil {
       log.Fatal(err)
     }
     if tc.want != got {
-      t.Errorf("sma.SimpleMovingAverage(%v,%v) = %v, want %v", tc.period, tc.testSeries, got, tc.want)
+      t.Errorf("SimpleMovingAverage(%v,%v) = %v, want %v", tc.period, tc.testSeries, got, tc.want)
     }
   }
 }
@@ -27,27 +26,27 @@ func TestSimpleMovingAverage(t *testing.T) {
 func TestSimpleMovingAverageSeries50(t *testing.T) {
   subSeries := testSeries[len(testSeries)-52:]
   period := 50
-  smaSeries, err := sma.SimpleMovingAverageSeries(period, subSeries)
+  smaSeries, err := SimpleMovingAverageSeries(period, subSeries)
   if err != nil {
     log.Fatal(err)
   }
 
   if len(smaSeries) != 3 {
-    t.Errorf("len(sma.SimpleMovingAverageSeries(%v,%v)) = %v, want %v", period, testSeries, len(smaSeries), 3)
+    t.Errorf("len(SimpleMovingAverageSeries(%v,%v)) = %v, want %v", period, testSeries, len(smaSeries), 3)
   }
   wantSMA2 := 1187.2912033799998
   gotSMA2 := smaSeries[2]
   if wantSMA2 != gotSMA2 {
-    t.Errorf("sma.SimpleMovingAverageSeries(%v,%v) = %v, want %v", period, testSeries, gotSMA2, wantSMA2)
+    t.Errorf("SimpleMovingAverageSeries(%v,%v) = %v, want %v", period, testSeries, gotSMA2, wantSMA2)
   }
 
-  wantSMA, err := sma.SimpleMovingAverage(period, testSeries[:len(testSeries)-1])
+  wantSMA, err := SimpleMovingAverage(period, testSeries[:len(testSeries)-1])
   if err != nil {
     log.Fatal(err)
   }
   gotSMA := smaSeries[1]
   if wantSMA != gotSMA {
-    t.Errorf("sma.SimpleMovingAverageSeries(%v,%v) = %v, want %v", period, testSeries, gotSMA, wantSMA)
+    t.Errorf("SimpleMovingAverageSeries(%v,%v) = %v, want %v", period, testSeries, gotSMA, wantSMA)
   }
 }
 
@@ -55,26 +54,26 @@ func TestSimpleMovingAverageSeries50(t *testing.T) {
 func TestExponentialMovingAverage10(t *testing.T) {
   period := 10
   want := 1224.7593918576256
-  got, err := sma.ExponentialMovingAverage(period, testSeries)
+  got, err := ExponentialMovingAverage(period, testSeries)
   if err != nil {
     log.Fatal(err)
   }
 
   if want != got {
-    t.Errorf("sma.ExponentialMovingAverage(%v,%v) = %v, want %v", period, testSeries, got, want)
+    t.Errorf("ExponentialMovingAverage(%v,%v) = %v, want %v", period, testSeries, got, want)
   }
 }
 
 func TestExponentialMovingAverage30(t *testing.T) {
   period := 30
   want := 1202.3654628306713
-  got, err := sma.ExponentialMovingAverage(period, testSeries)
+  got, err := ExponentialMovingAverage(period, testSeries)
   if err != nil {
     log.Fatal(err)
   }
 
   if want != got {
-    t.Errorf("sma.ExponentialMovingAverage(%v,%v) = %v, want %v", period, testSeries, got, want)
+    t.Errorf("ExponentialMovingAverage(%v,%v) = %v, want %v", period, testSeries, got, want)
   }
 }
 

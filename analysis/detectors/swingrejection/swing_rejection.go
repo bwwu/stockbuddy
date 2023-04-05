@@ -10,10 +10,10 @@ package swingrejection
 
 import (
   "fmt"
-  "stockbuddy/analysis/constants"
-  "stockbuddy/analysis/insight"
-  "stockbuddy/analysis/lib/rsi"
-  pb "stockbuddy/protos/quote_go_proto"
+  "github.com/bwwu/stockbuddy/analysis/constants"
+  "github.com/bwwu/stockbuddy/analysis/insight"
+  "github.com/bwwu/stockbuddy/analysis/lib/rsi"
+  "github.com/bwwu/stockbuddy/quote"
 )
 
 type SwingRejection struct {
@@ -51,10 +51,10 @@ func NewSwingRejectionDetector(lookback, period int) (*SwingRejectionDetector) {
   }
 }
 
-func (d *SwingRejectionDetector) Process(quotes []*pb.Quote) (insight.Indicator, error) {
+func (d *SwingRejectionDetector) Process(quotes []*quote.Quote) (insight.Indicator, error) {
   prices := make([]float64, 0, len(quotes))
-  for _, quote := range quotes {
-    prices = append(prices, quote.Close)
+  for _, q := range quotes {
+    prices = append(prices, q.Close)
   }
 
   rsiSeries, err := rsi.RelativeStrengthIndexSeries(d.period, prices)
