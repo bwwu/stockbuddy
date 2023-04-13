@@ -7,9 +7,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/bwwu/stockbuddy/analysis/detectors/macdx"
-	"github.com/bwwu/stockbuddy/analysis/detectors/smax"
-	"github.com/bwwu/stockbuddy/analysis/detectors/swingrejection"
+	"github.com/bwwu/stockbuddy/analysis/detectors"
 	"github.com/bwwu/stockbuddy/analysis/insight"
 	"github.com/bwwu/stockbuddy/fileio"
 	"github.com/bwwu/stockbuddy/quote"
@@ -72,18 +70,14 @@ func mail(password, content string, recipients []string) {
 
 func process(client quote.QuoteClient, stocks []string) []*insight.AnalyzerSummary {
 	// Instantiate all of the detectors to run.
-	detectors := make([]insight.Detector, 0, 3)
-	if smaDetec, err := smax.NewSimpleMovingAverageDetector(12, 48); err != nil {
+	detecs, err := detectors.GetDefaultDetectors([]string{
+		"sma",
+		"macd",
+		"swingrejection",
+	}) 
+	if err != nil {
 		log.Fatal(err)
-	} else {
-		detectors = append(detectors, smaDetec)
-	}
-	if macdDetec, err := macdx.NewMACDDetector(12, 26, 9); err != nil {
-		log.Fatal(err)
-	} else {
-		detectors = append(detectors, macdDetec)
-	}
-	detectors = append(detectors, swingrejection.NewSwingRejectionDetector(30, 14))
+	} 
 
 	// Spawn goroutine to run analyzer over all detectors, one per stock.
 	summaryc := make(chan *insight.AnalyzerSummary)
@@ -91,7 +85,7 @@ func process(client quote.QuoteClient, stocks []string) []*insight.AnalyzerSumma
 
 	for _, symbol := range stocks {
 		go func(s string) {
-			analyzer := insight.NewAnalyzer(client, detectors...)
+			analyzer := insight.NewAnalyzer(client, detecs...)
 			indicators := analyzer.Analyze(context.Background(), s)
 			if indicators == nil {
 				summaryc <- nil
