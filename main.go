@@ -3,11 +3,8 @@ package main
 import (
 	"context"
 	"flag"
-	"fmt"
 	"log"
 	"os"
-	"regexp"
-	"strings"
 	"time"
 
 	"github.com/bwwu/stockbuddy/analysis/detectors/macdx"
@@ -23,7 +20,6 @@ var (
 	flagNomail    = flag.Bool("nomail", false, "Set to true to disable sending email reports.")
 	flagWatchlist = flag.String("use_watchlist", "watchlists/default.txt", "Path to txt file with a list of stocks to track.")
 	flagMailList  = flag.String("mail_to", "", "Comma separated list of email addresses to whom results will be mailed.")
-	emailRE       = regexp.MustCompile("\\w+@\\w+\\.\\w+")
 )
 
 func main() {
@@ -34,9 +30,13 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
-	mailList, err := parseEmailsFromList(*flagMailList)
-	if err != nil {
-		log.Fatal(err)
+	var mailList []string
+ 
+	if !*flagNomail {
+		mailList, err = smtp.ParseEmailsFromList(*flagMailList)
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 
 	emailPassword := os.Getenv("STOCKBUDDY_PASSWORD")
@@ -68,28 +68,6 @@ func mail(password, content string, recipients []string) {
 
 	email := smtp.Email{body, subject, recipients}
 	email.Send(password)
-}
-
-// Given a comma-separated-list of emails given by a flag value, return a list of validated email
-// addresses.
-func parseEmailsFromList(raw string) ([]string, error) {
-	if *flagNomail {
-		return []string{}, nil
-	}
-	errPrefix := "main::parseEmailFromList():"
-	result := strings.Split(raw, ",")
-
-	if len(result) == 0 {
-		return nil, fmt.Errorf("%s empty email list", errPrefix)
-	}
-
-	// Validate email addresses.
-	for _, email := range result {
-		if !emailRE.MatchString(email) {
-			return nil, fmt.Errorf(`%s invalid email "%s"`, errPrefix, email)
-		}
-	}
-	return result, nil
 }
 
 func process(client quote.QuoteClient, stocks []string) []*insight.AnalyzerSummary {
