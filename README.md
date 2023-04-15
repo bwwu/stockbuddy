@@ -1,6 +1,7 @@
 ## Prerequisites
 
 * Install [go](https://golang.org/doc/install) compiler.
+* (Optional) [Docker](https://github.com/docker/docker-install).
 
 ## Instructions
 
@@ -40,3 +41,21 @@ export STOCKBUDDY_PASSWORD=<password>
 
 Default watchlist is located at [watchlists/default.txt](
 https://github.com/bwwu/stockbuddy/blob/master/watchlists/default.txt).
+
+
+## Using Docker
+
+You can also use Docker for development. 
+
+1. Build the image setting the stockbuddy password.
+
+```sh
+docker build -t stockbuddy --build-arg secret=$STOCKBUDDY_PASSWORD
+```
+
+2. Run the image.
+
+```sh
+docker run stockbuddy
+```
+
