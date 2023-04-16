@@ -71,9 +71,7 @@ func mail(password, content string, recipients []string) {
 func process(client quote.QuoteClient, stocks []string) []*insight.AnalyzerSummary {
 	// Instantiate all of the detectors to run.
 	detecs, err := detectors.GetDefaultDetectors([]string{
-		"sma",
-		"macd",
-		"swingrejection",
+		"macd_rsi",
 	}) 
 	if err != nil {
 		log.Fatal(err)
