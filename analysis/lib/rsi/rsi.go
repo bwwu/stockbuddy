@@ -2,6 +2,7 @@ package rsi
 
 import (
 	"fmt"
+	"github.com/bwwu/stockbuddy/analysis/constants"
 	"github.com/bwwu/stockbuddy/analysis/lib/sma"
 )
 
@@ -58,6 +59,16 @@ func RelativeStrengthIndex(n int, prices []float64) (float64, error) {
 		return 0., err
 	}
 	return series[len(series)-1], nil
+}
+
+func ToPriceExtension(rsi float64) constants.PriceExtension {
+	if rsi < 30.0 {
+		return constants.Oversold
+	}
+	if rsi > 70.0 {
+		return constants.Overbought
+	}
+	return 0
 }
 
 // Calculate price deltas, for t=0,...N, diff(t) = Price(t+1)-Price(t).

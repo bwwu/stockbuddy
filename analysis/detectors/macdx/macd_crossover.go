@@ -31,12 +31,33 @@ func NewMACDDetector(shortTerm, longTerm, signalTerm int) (*MACDDetector, error)
 }
 
 func (d *MACDDetector) Process(quotes []*quote.Quote) (insight.Indicator, error) {
-	// Collect closing prices.
 	prices := make([]float64, 0, len(quotes))
 	for _, q := range quotes {
 		prices = append(prices, q.Close)
 	}
 
+	crossovers, err := d.GenerateMACDCrossoverSeries(prices)
+	if err != nil {
+		return nil, err
+	}
+	
+	recentCrossover := crossovers[len(crossovers)-1]
+	if recentCrossover == 0 {
+		return nil, nil
+	}
+	return &MACDCrossover{
+		shortTerm:  d.shortTerm,
+		longTerm:   d.longTerm,
+		signalTerm: d.signalTerm,
+		outlook:    recentCrossover,
+	}, nil
+}
+
+// GenerateMACDCrossoverSeries returns a list of MACD/Signal line crossover
+//	events. For example, when a MACD 12-26 line positively crosses a 9 day
+//	signal line, emit a BULLISH outlook. The outlook at the len(series)-1
+//	index represents the most recent day's outlook.
+func (d *MACDDetector) GenerateMACDCrossoverSeries(prices []float64) ([]constants.Outlook, error) {
 	macdSeries, err := macd.MovingAverageConvergenceDivergenceSeries(d.shortTerm, d.longTerm, prices)
 	if err != nil {
 		return nil, err
@@ -46,25 +67,12 @@ func (d *MACDDetector) Process(quotes []*quote.Quote) (insight.Indicator, error)
 		return nil, err
 	}
 
-	crossovers := crossover.DetectCrossovers(macdSeries, signalLine)
-	recentCrossover := crossovers[len(crossovers)-1]
-	if recentCrossover == 0 {
-		return nil, nil
-	}
-	return &MACDCrossover{
-		shortTerm:  d.shortTerm,
-		longTerm:   d.longTerm,
-		signalTerm: d.signalTerm,
-		macd:       macdSeries[len(macdSeries)-1],
-		signalLine: signalLine[len(signalLine)-1],
-		outlook:    recentCrossover,
-	}, nil
+	return crossover.DetectCrossovers(macdSeries, signalLine), nil
 }
 
 // MACDCrossover
 type MACDCrossover struct {
 	shortTerm, longTerm, signalTerm int
-	macd, signalLine                float64
 	outlook                         constants.Outlook
 }
 
@@ -74,13 +82,10 @@ func (c MACDCrossover) Name() string {
 
 func (c MACDCrossover) Summary() string {
 	return fmt.Sprintf(
-		"MACD(%d,%d)=%.2f, Signal Line(%d)=%.2f, Delta=%.2f",
+		"MACD(%d,%d,%d)",
 		c.shortTerm,
 		c.longTerm,
-		c.macd,
 		c.signalTerm,
-		c.signalLine,
-		c.macd-c.signalLine,
 	)
 }
 

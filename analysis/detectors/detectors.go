@@ -3,6 +3,7 @@ package detectors
 import (
 	"errors"
 	"fmt"
+	"github.com/bwwu/stockbuddy/analysis/detectors/macdrsi"
 	"github.com/bwwu/stockbuddy/analysis/detectors/macdx"
 	"github.com/bwwu/stockbuddy/analysis/detectors/smax"
 	"github.com/bwwu/stockbuddy/analysis/detectors/swingrejection"
@@ -30,6 +31,7 @@ func GetDefaultDetectors(names []string) ([]insight.Detector, error) {
 
 var defaultDetectors = map[string]func()(insight.Detector, error){
 	"macd": macd12_26_9,
+	"macd_rsi": macd_rsi,
 	"sma": sma12_48,
 	"swingrejection": swingrection30_14,
 }
@@ -44,4 +46,8 @@ func sma12_48() (insight.Detector, error) {
 
 func swingrection30_14() (insight.Detector, error) {
 	return swingrejection.NewSwingRejectionDetector(30, 14), nil
+}
+
+func macd_rsi() (insight.Detector, error) {
+	return macdrsi.NewMACDxRSIDetector(12, 26, 9, 14, 15)
 }
