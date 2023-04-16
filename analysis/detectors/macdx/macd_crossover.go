@@ -40,7 +40,7 @@ func (d *MACDDetector) Process(quotes []*quote.Quote) (insight.Indicator, error)
 	if err != nil {
 		return nil, err
 	}
-	
+
 	recentCrossover := crossovers[len(crossovers)-1]
 	if recentCrossover == 0 {
 		return nil, nil
@@ -54,6 +54,7 @@ func (d *MACDDetector) Process(quotes []*quote.Quote) (insight.Indicator, error)
 }
 
 // GenerateMACDCrossoverSeries returns a list of MACD/Signal line crossover
+//
 //	events. For example, when a MACD 12-26 line positively crosses a 9 day
 //	signal line, emit a BULLISH outlook. The outlook at the len(series)-1
 //	index represents the most recent day's outlook.

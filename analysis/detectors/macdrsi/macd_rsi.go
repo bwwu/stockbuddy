@@ -6,20 +6,18 @@ import (
 	"fmt"
 	"github.com/bwwu/stockbuddy/analysis/constants"
 	"github.com/bwwu/stockbuddy/analysis/detectors/macdx"
-	"github.com/bwwu/stockbuddy/analysis/lib/rsi"
 	"github.com/bwwu/stockbuddy/analysis/insight"
+	"github.com/bwwu/stockbuddy/analysis/lib/rsi"
 	"github.com/bwwu/stockbuddy/quote"
 	"github.com/bwwu/stockbuddy/util"
-
-
 )
 
 // A MACDxRSIDetector is a compound detector combining MACD crossover and RSI
+//
 //	swing rejection.
-type MACDxRSIDetector struct
-{
+type MACDxRSIDetector struct {
 	period, lookback int // Num days over which to smooth RSI.
-	macdx *macdx.MACDDetector
+	macdx            *macdx.MACDDetector
 }
 
 func NewMACDxRSIDetector(shortTerm, longTerm, signalTerm, period, lookback int) (*MACDxRSIDetector, error) {
@@ -40,7 +38,7 @@ func (d *MACDxRSIDetector) Process(quotes []*quote.Quote) (insight.Indicator, er
 		return nil, nil
 	}
 
-	for i:= 0; i < d.lookback; i++ {
+	for i := 0; i < d.lookback; i++ {
 		ext := extensions[len(extensions)-i-1]
 		outlook := macdInsight.Outlook()
 		if ext == constants.Oversold && outlook == constants.Bullish || ext == constants.Overbought && outlook == constants.Bearish {

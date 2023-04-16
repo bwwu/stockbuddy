@@ -7,7 +7,7 @@ import (
 	"regexp"
 	"strings"
 )
-	
+
 var emailRE = regexp.MustCompile("\\w+@\\w+\\.\\w+")
 
 type Email struct {
@@ -44,7 +44,6 @@ func getEmailContent(e *Email) []byte {
 	)
 	return []byte(content)
 }
-
 
 // Given a comma-separated-list of emails given by a flag value, return a list of validated email
 // addresses.

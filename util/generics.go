@@ -1,4 +1,5 @@
 // Package util contains generic things that really should be implemented in
+//
 //	core go.
 package util
 

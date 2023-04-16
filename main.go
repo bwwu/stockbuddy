@@ -29,7 +29,7 @@ func main() {
 	}
 
 	var mailList []string
- 
+
 	if !*flagNomail {
 		mailList, err = smtp.ParseEmailsFromList(*flagMailList)
 		if err != nil {
@@ -72,10 +72,10 @@ func process(client quote.QuoteClient, stocks []string) []*insight.AnalyzerSumma
 	// Instantiate all of the detectors to run.
 	detecs, err := detectors.GetDefaultDetectors([]string{
 		"macd_rsi",
-	}) 
+	})
 	if err != nil {
 		log.Fatal(err)
-	} 
+	}
 
 	// Spawn goroutine to run analyzer over all detectors, one per stock.
 	summaryc := make(chan *insight.AnalyzerSummary)

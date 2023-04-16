@@ -8,7 +8,6 @@ import (
 	"github.com/bwwu/stockbuddy/analysis/detectors/smax"
 	"github.com/bwwu/stockbuddy/analysis/detectors/swingrejection"
 	"github.com/bwwu/stockbuddy/analysis/insight"
-
 )
 
 func GetDefaultDetectors(names []string) ([]insight.Detector, error) {
@@ -29,10 +28,10 @@ func GetDefaultDetectors(names []string) ([]insight.Detector, error) {
 	return detecs, errors.Join(errs...)
 }
 
-var defaultDetectors = map[string]func()(insight.Detector, error){
-	"macd": macd12_26_9,
-	"macd_rsi": macd_rsi,
-	"sma": sma12_48,
+var defaultDetectors = map[string]func() (insight.Detector, error){
+	"macd":           macd12_26_9,
+	"macd_rsi":       macd_rsi,
+	"sma":            sma12_48,
 	"swingrejection": swingrection30_14,
 }
 
