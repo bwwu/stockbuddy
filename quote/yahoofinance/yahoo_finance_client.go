@@ -22,7 +22,10 @@ type YFQuote struct {
 func NewYahooFinanceClient(timeoutInSec int) *YahooFinanceClient {
 	return &YahooFinanceClient{
 		client: http.Client{
-			Timeout: time.Duration(timeoutInSec) * time.Second,
+			Timeout: time.Duration(timeoutInSec)*time.Second,
+			Transport: &http.Transport{
+				ResponseHeaderTimeout: time.Duration(timeoutInSec)*time.Second,
+			},
 		},
 	}
 }

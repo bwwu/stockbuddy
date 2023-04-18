@@ -12,7 +12,7 @@ type QuoteClient struct {
 
 func NewQuoteClient() QuoteClient {
 	return QuoteClient{
-		client: yahoofinance.NewYahooFinanceClient(5), // 5s http timeout
+		client: yahoofinance.NewYahooFinanceClient(20), // 5s http timeout
 	}
 }
 
