@@ -32,10 +32,6 @@ func NewYahooFinanceClient(timeoutInSec int) *YahooFinanceClient {
 
 func (y *YahooFinanceClient) GetQuoteHistory(ctx context.Context, symbol string, days int) ([]*YFQuote, error) {
 	cookies := map[string]string{
-		"B":      "ajch0f5elj4sp",
-		"APID":   "1Adf2ce59c-c1e2-11e9-adce-025f25c4bfdc",
-		"APIDTS": "1566870258",
-		"PRF":    "t%3D" + symbol,
 	}
 	timeEnd := time.Now()
 	timeStart := timeEnd.AddDate(0, 0, -1*days)
@@ -57,8 +53,11 @@ func (y *YahooFinanceClient) GetQuoteHistory(ctx context.Context, symbol string,
 
 	resp, err := y.client.Do(req)
 	if err != nil {
+		fmt.Printf("http error: %v", err)
 		return nil, err
 	}
+
+	fmt.Printf("Status: %v", resp.Status)
 
 	defer resp.Body.Close()
 	reader := csv.NewReader(resp.Body)
